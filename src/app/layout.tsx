@@ -10,7 +10,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Next.js with Tailwind CSS',
+  title: 'Ice n Spice',
   description: 'A boilerplate project with Next.js and Tailwind CSS',
   icons: {
     icon: [{ url: '/assets/images/app_logo.png', type: 'image/x-icon' }],
