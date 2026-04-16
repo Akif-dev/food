@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import AppImage from '@/components/ui/AppImage';
 import FoodModal from './FoodModal';
+import { supabase, Category } from '@/lib/supabase';
 
 const menuData = [
   // BURGERS
@@ -454,29 +455,103 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [selectedItem, setSelectedItem] = useState<(typeof menuData)[0] | null>(null);
   const [search, setSearch] = useState('');
+  const [menuItems, setMenuItems] = useState<(typeof menuData)[0][]>(menuData);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(false);
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
 
-  const categories = [
-    { id: 'all', label: 'All Items', emoji: '🍽️' },
-    { id: 'burgers', label: 'Burgers', emoji: '🍔' },
-    { id: 'pizza', label: 'Pizza', emoji: '🍕' },
-    { id: 'pasta', label: 'Pasta', emoji: '🍝' },
-    { id: 'sushi', label: 'Sushi', emoji: '🍣' },
-    { id: 'grills', label: 'Grills', emoji: '🥩' },
-    { id: 'salads', label: 'Salads', emoji: '🥗' },
-    { id: 'desserts', label: 'Desserts', emoji: '🍰' },
-    { id: 'drinks', label: 'Drinks', emoji: '🥤' },
-  ];
+  const scrollCategories = (direction: 'left' | 'right') => {
+    if (categoryScrollRef.current) {
+      categoryScrollRef.current.scrollBy({
+        left: direction === 'left' ? -300 : 300,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  useEffect(() => {
+    fetchMenuItems();
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setCategories(data || []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const categoryIdToName = useMemo(() => {
+    const map: Record<string, string> = {};
+    categories.forEach((cat) => {
+      map[cat.id.toString()] = cat.name.toLowerCase();
+    });
+    return map;
+  }, [categories]);
+
+  const fetchMenuItems = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase.from('menu_items').select('*').eq('available', true);
+
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        const transformed = data.map((item) => ({
+          id: item.id,
+          name: item.name,
+          description: item.description || '',
+          price: item.price,
+          rating: 4.5,
+          reviews: Math.floor(Math.random() * 100) + 50,
+          image: item.image_url || '/assets/images/no_image.png',
+          alt: item.name,
+          category: item.category_id ? item.category_id.toString() : 'all',
+          isVeg: false,
+          prepTime: '20 min',
+          calories: '500 kcal',
+          variations:
+            item.variations?.map((v: string, i: number) => ({
+              id: `v${i}`,
+              name: v,
+              priceAdd: 0,
+            })) || [],
+          addons:
+            item.addons?.map((a: string, i: number) => ({ id: `a${i}`, name: a, price: 100 })) ||
+            [],
+          spiceLevels: item.spice_levels || [],
+        }));
+        setMenuItems(transformed);
+      }
+    } catch (error) {
+      console.error('Error fetching menu items:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filtered = useMemo(() => {
-    return menuData.filter((item) => {
-      const matchCat = activeCategory === 'all' || item.category === activeCategory;
+    return menuItems.filter((item) => {
+      let matchCat = activeCategory === 'all';
+      if (!matchCat) {
+        const categoryIdName = categoryIdToName[activeCategory];
+        matchCat =
+          item.category === activeCategory ||
+          (categoryIdName !== undefined && item.category === categoryIdName);
+      }
       const matchSearch =
         search === '' ||
         item.name.toLowerCase().includes(search.toLowerCase()) ||
         item.description.toLowerCase().includes(search.toLowerCase());
       return matchCat && matchSearch;
     });
-  }, [activeCategory, search]);
+  }, [activeCategory, search, menuItems, categoryIdToName]);
 
   const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   const textPrimary = isDark ? '#F5F5F0' : '#1A1A24';
@@ -493,21 +568,76 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
           backdropFilter: 'blur(20px)',
         }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-wrap items-center gap-3">
-            {categories.map((cat) => (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Search Bar - Full Width Above Categories */}
+          <div className="py-3">
+            <div className="relative w-full">
+              <input
+                type="text"
+                placeholder="Search dishes..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-300"
+                style={{
+                  background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+                  border: `1px solid ${borderColor}`,
+                  color: textPrimary,
+                }}
+                aria-label="Search menu items"
+              />
+              <svg
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5"
+                style={{ color: textMuted }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* Category Pills - Full Width with Scroll Buttons */}
+          <div className="relative flex items-center gap-2">
+            <button
+              onClick={() => scrollCategories('left')}
+              className={`flex-shrink-0 p-2 rounded-xl transition-all duration-300 hover:scale-110 ${
+                isDark
+                  ? 'bg-white/10 text-white/70 hover:bg-white/20'
+                  : 'bg-black/5 text-gray-600 hover:bg-black/10'
+              }`}
+              aria-label="Scroll left"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+            <div
+              ref={categoryScrollRef}
+              className="flex gap-2 overflow-x-auto scroll-hide flex-1 pb-3"
+            >
               <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
-                  activeCategory === cat.id
+                key="all"
+                onClick={() => setActiveCategory('all')}
+                className={`category-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
+                  activeCategory === 'all'
                     ? 'text-white shadow-lg'
                     : isDark
                       ? 'text-white/50 hover:text-white hover:bg-white/8'
                       : 'text-gray-500 hover:text-gray-900 hover:bg-black/5'
                 }`}
                 style={
-                  activeCategory === cat.id
+                  activeCategory === 'all'
                     ? {
                         background: 'linear-gradient(135deg, #F59E0B, #F97316)',
                         boxShadow: '0 4px 16px rgba(245,158,11,0.35)',
@@ -515,40 +645,55 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
                     : {}
                 }
               >
-                <span>{cat.emoji}</span>
-                <span>{cat.label}</span>
+                <span>🍽️</span>
+                <span>All</span>
               </button>
-            ))}
-          </div>
-          {/* Search Bar */}
-          <div className="mt-4 relative">
-            <input
-              type="text"
-              placeholder="Search dishes..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-300"
-              style={{
-                background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-                border: `1px solid ${borderColor}`,
-                color: textPrimary,
-              }}
-              aria-label="Search menu items"
-            />
-            <svg
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5"
-              style={{ color: textMuted }}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+              {categories.map((cat) => {
+                const isActive = activeCategory === cat.id.toString();
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id.toString())}
+                    className={`category-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
+                      isActive
+                        ? 'text-white shadow-lg'
+                        : isDark
+                          ? 'text-white/50 hover:text-white hover:bg-white/8'
+                          : 'text-gray-500 hover:text-gray-900 hover:bg-black/5'
+                    }`}
+                    style={
+                      isActive
+                        ? {
+                            background: 'linear-gradient(135deg, #F59E0B, #F97316)',
+                            boxShadow: '0 4px 16px rgba(245,158,11,0.35)',
+                          }
+                        : {}
+                    }
+                  >
+                    <span>{cat.icon}</span>
+                    <span>{cat.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              onClick={() => scrollCategories('right')}
+              className={`flex-shrink-0 p-2 rounded-xl transition-all duration-300 hover:scale-110 ${
+                isDark
+                  ? 'bg-white/10 text-white/70 hover:bg-white/20'
+                  : 'bg-black/5 text-gray-600 hover:bg-black/10'
+              }`}
+              aria-label="Scroll right"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>

@@ -126,7 +126,7 @@ export default function HomePage() {
                 Browse Full Menu →
               </a>
               <a
-                href={`https://wa.me/923001234567?text=Hi! I'd like to place an order from RestoOrder`}
+                href={`https://wa.me/923001234567?text=Hi! I'd like to place an order from Ice n Spice`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="whatsapp-btn px-10 py-4 rounded-2xl font-bold text-white text-base flex items-center justify-center gap-2"

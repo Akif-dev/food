@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { supabase, Category } from '@/lib/supabase';
 
 interface CategoryScrollProps {
   isDark: boolean;
@@ -10,17 +11,27 @@ interface CategoryScrollProps {
 export default function CategoryScroll({ isDark }: CategoryScrollProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = [
-    { id: 1, name: 'Burgers', description: 'Premium beef & chicken', emoji: '🍔' },
-    { id: 2, name: 'Pizza', description: 'Wood-fired classics', emoji: '🍕' },
-    { id: 3, name: 'Pasta', description: 'Italian specialties', emoji: '🍝' },
-    { id: 4, name: 'Sushi', description: 'Fresh Japanese', emoji: '🍣' },
-    { id: 5, name: 'Grills', description: 'BBQ & tandoori', emoji: '🥩' },
-    { id: 6, name: 'Salads', description: 'Fresh & healthy', emoji: '🥗' },
-    { id: 7, name: 'Desserts', description: 'Sweet treats', emoji: '🍰' },
-    { id: 8, name: 'Drinks', description: 'Refreshing beverages', emoji: '🥤' },
-  ];
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setCategories(data || []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const gradients = [
     'from-amber-400 to-orange-500',
@@ -39,6 +50,23 @@ export default function CategoryScroll({ isDark }: CategoryScrollProps) {
       scrollRef.current.scrollBy({ left: dir === 'left' ? -200 : 200, behavior: 'smooth' });
     }
   };
+
+  if (loading) {
+    return (
+      <section className="py-20" style={{ background: isDark ? '#0A0A0F' : '#FAF8F3' }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-amber-500 text-xl animate-pulse font-bold">
+            Loading categories...
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  const allCategories = [
+    { id: 0, name: 'All Items', description: '', icon: '🍽️', created_at: '', updated_at: '' },
+    ...categories,
+  ];
 
   return (
     <section className="py-20" style={{ background: isDark ? '#0A0A0F' : '#FAF8F3' }}>
@@ -112,12 +140,12 @@ export default function CategoryScroll({ isDark }: CategoryScrollProps) {
 
           {/* Scroll Container */}
           <div ref={scrollRef} className="flex gap-6 overflow-x-auto scroll-hide pb-4 px-2">
-            {categories.map((cat: any, i: number) => {
+            {allCategories.map((cat: any, i: number) => {
               const gradient = gradients[i % gradients.length];
               return (
                 <Link
                   key={cat.id}
-                  href={`/menu?category=${cat.name.toLowerCase()}`}
+                  href={cat.id === 0 ? '/menu' : `/menu?category=${cat.id}`}
                   className="group relative flex-shrink-0"
                   onMouseEnter={() => setHoveredCategory(cat.id)}
                   onMouseLeave={() => setHoveredCategory(null)}
@@ -166,7 +194,7 @@ export default function CategoryScroll({ isDark }: CategoryScrollProps) {
                               : undefined,
                         }}
                       >
-                        {cat.emoji}
+                        {cat.icon}
                       </div>
 
                       {/* Category name */}

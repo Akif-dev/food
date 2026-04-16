@@ -144,7 +144,7 @@ export default function CheckoutForm({
           `• ${i.quantity}x ${i.name}${i.variation ? ` (${i.variation})` : ''}${i.addons.length ? ` [+${i.addons.join(', ')}]` : ''} - ₨${(i.price * i.quantity).toLocaleString()}`
       )
       .join('\n');
-    const msg = `🍽️ *New Order from RestoOrder*\n\n*Customer:* ${form.name}\n*Phone:* ${form.phone}\n*Type:* ${deliveryType === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}${deliveryType === 'delivery' ? `\n*Address:* ${form.address}, ${form.area}, ${form.city}` : ''}\n\n*Order Details:*\n${orderText}\n\n*Subtotal:* ₨${subtotal.toLocaleString()}\n*Delivery:* ${deliveryFee === 0 ? 'FREE' : `₨${deliveryFee}`}\n*Tax:* ₨${tax.toLocaleString()}\n*Total:* ₨${total.toLocaleString()}\n\n*Payment:* ${form.paymentMethod === 'cod' ? 'Cash on Delivery' : form.paymentMethod === 'card' ? 'Card' : 'Bank Transfer'}${form.notes ? `\n\n*Notes:* ${form.notes}` : ''}`;
+    const msg = `🍽️ *New Order from Ice n Spice*\n\n*Customer:* ${form.name}\n*Phone:* ${form.phone}\n*Type:* ${deliveryType === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}${deliveryType === 'delivery' ? `\n*Address:* ${form.address}, ${form.area}, ${form.city}` : ''}\n\n*Order Details:*\n${orderText}\n\n*Subtotal:* ₨${subtotal.toLocaleString()}\n*Delivery:* ${deliveryFee === 0 ? 'FREE' : `₨${deliveryFee}`}\n*Tax:* ₨${tax.toLocaleString()}\n*Total:* ₨${total.toLocaleString()}\n\n*Payment:* ${form.paymentMethod === 'cod' ? 'Cash on Delivery' : form.paymentMethod === 'card' ? 'Card' : 'Bank Transfer'}${form.notes ? `\n\n*Notes:* ${form.notes}` : ''}`;
     window.open(`https://wa.me/923001234567?text=${encodeURIComponent(msg)}`, '_blank');
   };
 

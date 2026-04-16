@@ -69,7 +69,7 @@ export default function Header({
               <img
                 src="/logo-ins-akif.png"
                 alt="Ice n Spice Logo"
-                className="w-40 object-contain group-hover:shadow-neon-amber transition-all duration-300 group-hover:scale-110"
+                className="w-40 transition-all duration-300 group-hover:scale-110"
               />
               <div
                 className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-current animate-pulse"

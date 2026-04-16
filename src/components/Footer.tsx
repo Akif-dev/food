@@ -68,7 +68,7 @@ export default function Footer({ isDark = true }: FooterProps) {
           className={`mt-6 pt-4 border-t text-center text-xs ${textMuted}`}
           style={{ borderColor }}
         >
-          © 2026 RestoOrder. All rights reserved. Crafted with ❤️ for food lovers.
+          © 2026 Ice n Spice. All rights reserved. Crafted with ❤️ for food lovers.
         </div>
       </div>
     </footer>

@@ -71,7 +71,7 @@ export default function WhyChooseUs({ isDark }: WhyChooseUsProps) {
           <h2
             className={`text-3xl lg:text-5xl font-display font-black ${isDark ? 'text-white' : 'text-gray-900'}`}
           >
-            The <span className="gradient-text-amber italic">RestoOrder</span> Difference
+            The <span className="gradient-text-amber italic">Ice n Spice</span> Difference
           </h2>
           <p
             className={`mt-4 text-lg max-w-2xl mx-auto ${isDark ? 'text-white/50' : 'text-gray-500'}`}
