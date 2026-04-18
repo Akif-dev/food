@@ -518,18 +518,6 @@ export default function CheckoutForm({
 
               desc: 'Pay when your order arrives',
             },
-
-            {
-              id: 'card',
-
-              label: 'Debit / Credit Card',
-
-              icon: '💳',
-
-              desc: 'Visa, Mastercard, UnionPay',
-            },
-
-            { id: 'bank', label: 'Bank Transfer', icon: '🏦', desc: 'JazzCash, EasyPaisa, HBL' },
           ].map((method) => {
             const isSelected = form.paymentMethod === method.id;
 
