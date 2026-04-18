@@ -194,11 +194,11 @@ export default function CheckoutPage() {
                       Need help?
                     </div>
                     <div className="text-xs" style={{ color: textMuted }}>
-                      Call us: +92 300 1234567
+                      Call us: +92 321 6638470
                     </div>
                   </div>
                   <a
-                    href="tel:+923001234567"
+                    href="tel:+923216638470"
                     className="text-xs font-bold text-amber-500 hover:underline flex-shrink-0"
                   >
                     Call Now

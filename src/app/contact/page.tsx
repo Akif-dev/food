@@ -259,9 +259,9 @@ export default function ContactPage() {
                 className={`rounded-3xl overflow-hidden ${isDark ? 'glass-card-dark' : 'glass-card-light'}`}
                 style={{ border: `1px solid ${borderColor}` }}
               >
-                <div className="aspect-square md:aspect-video lg:aspect-square">
+                <div className="aspect-square md:aspect-video lg:aspect-square overflow-hidden rounded-2xl shadow-xl border border-white/10">
                   <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3620.123456789!2d67.03456789!3d24.91234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDUxJzI4LjQiTiA2N8KwMDInMDguNCJF!5e0!3m2!1sen!2s!4v1620000000000!5m2!1sen!2s!4v1620000000000"
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3618.123565123456!2d67.0282502!3d24.9265199!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33f91b95d92b5%3A0x6d12cc46e8b5e8eb!2sIce%20n%20Spice!5e0!3m2!1sen!2spk!4v1714362545857!5m2!1sen!2spk"
                     className="w-full h-full"
                     style={{ border: 0 }}
                     allowFullScreen

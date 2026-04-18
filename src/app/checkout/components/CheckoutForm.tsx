@@ -344,7 +344,7 @@ export default function CheckoutForm({
 
               <input
                 type="tel"
-                placeholder="+92 300 1234567"
+                placeholder="+92 321 6638470"
                 value={form.phone}
                 onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                 className={inputClass}

@@ -236,7 +236,7 @@ export default function CartSidebar({
             </Link>
 
             <a
-              href={`https://wa.me/923001234567?text=Hi! I'd like to order: ${items.map((i) => `${i.quantity}x ${i.name}`).join(', ')}. Total: ₨${total.toLocaleString()}`}
+              href={`https://wa.me/923216638470?text=Hi! I'd like to order: ${items.map((i) => `${i.quantity}x ${i.name}`).join(', ')}. Total: ₨${total.toLocaleString()}`}
               target="_blank"
               rel="noopener noreferrer"
               className="block w-full py-3 rounded-2xl font-bold text-white text-center text-sm whatsapp-btn"
