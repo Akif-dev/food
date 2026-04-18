@@ -16,7 +16,7 @@ const testimonials = [
 
     alt: 'Ayesha Raza smiling portrait',
 
-    text: 'RestoOrder completely changed how I think about food delivery. The Wagyu Smash Burger arrived looking exactly like the photo — I literally gasped. This is restaurant quality at home.',
+    text: 'Ice n Spice completely changed how I think about food delivery. The Wagyu Smash Burger arrived looking exactly like the photo — I literally gasped. This is restaurant quality at home.',
 
     rating: 5,
 
@@ -56,7 +56,7 @@ const testimonials = [
 
     alt: 'Sana Khan warm smile portrait',
 
-    text: "As a professional chef, I am extremely picky. RestoOrder's Truffle Margherita uses actual San Marzano tomatoes and buffalo mozzarella. I can taste the difference. Extraordinary.",
+    text: "As a professional chef, I am extremely picky. Ice n Spice's Truffle Margherita uses actual San Marzano tomatoes and buffalo mozzarella. I can taste the difference. Extraordinary.",
 
     rating: 5,
 
@@ -132,7 +132,7 @@ export default function Testimonials({ isDark }: TestimonialsProps) {
               <p
                 className={`text-sm leading-relaxed mb-6 ${isDark ? 'text-white/70' : 'text-gray-600'}`}
               >
-                "{t.text}"
+                &quot;{t.text}&quot;
               </p>
 
               {/* Order tag */}

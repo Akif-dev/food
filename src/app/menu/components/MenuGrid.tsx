@@ -217,7 +217,7 @@ const menuData = [
     reviews: 189,
     image: 'https://img.rocket.new/generatedImages/rocket_gen_img_1a5e47e1d-1772378185610.png',
     alt: 'Elegant dragon sushi roll platter with colorful toppings',
-    badge: "Chef\'s Pick",
+    badge: "Chef's Pick",
     category: 'sushi',
     isVeg: false,
     prepTime: '25 min',
@@ -344,7 +344,7 @@ const menuData = [
     reviews: 423,
     image: 'https://img.rocket.new/generatedImages/rocket_gen_img_1f4d14547-1771884523691.png',
     alt: 'Decadent chocolate lava cake with ice cream and raspberry',
-    badge: "Chef\'s Pick",
+    badge: "Chef's Pick",
     category: 'desserts',
     isVeg: true,
     prepTime: '15 min',
@@ -457,7 +457,6 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
   const [search, setSearch] = useState('');
   const [menuItems, setMenuItems] = useState<(typeof menuData)[0][]>(menuData);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(false);
   const categoryScrollRef = useRef<HTMLDivElement>(null);
 
   const scrollCategories = (direction: 'left' | 'right') => {
@@ -497,7 +496,6 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
 
   const fetchMenuItems = async () => {
     try {
-      setLoading(true);
       const { data, error } = await supabase.from('menu_items').select('*').eq('available', true);
 
       if (error) throw error;
@@ -531,8 +529,6 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
       }
     } catch (error) {
       console.error('Error fetching menu items:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -603,7 +599,7 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
           </div>
 
           {/* Category Pills - Full Width with Scroll Buttons */}
-          <div className="relative flex items-center gap-2">
+          <div id="menu-section" className="relative flex items-center gap-2">
             <button
               onClick={() => scrollCategories('left')}
               className={`flex-shrink-0 p-2 rounded-xl transition-all duration-300 hover:scale-110 ${
@@ -629,7 +625,7 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
               <button
                 key="all"
                 onClick={() => setActiveCategory('all')}
-                className={`category-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
+                className={`category-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-md font-bold transition-all duration-300 ${
                   activeCategory === 'all'
                     ? 'text-white shadow-lg'
                     : isDark
@@ -654,7 +650,7 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
                   <button
                     key={cat.id}
                     onClick={() => setActiveCategory(cat.id.toString())}
-                    className={`category-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${
+                    className={`category-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-md font-bold transition-all duration-300 ${
                       isActive
                         ? 'text-white shadow-lg'
                         : isDark
@@ -760,7 +756,7 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
                 {/* Content */}
                 <div className="p-4">
                   <h3
-                    className="font-display font-bold text-sm leading-tight mb-1"
+                    className="font-display font-bold text-md leading-tight mb-1"
                     style={{ color: textPrimary }}
                   >
                     {item.name}

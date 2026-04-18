@@ -101,14 +101,24 @@ export default function AdminDashboard() {
           >
             <div className="flex items-center justify-between mb-4">
               <span className="text-3xl">{stat.icon}</span>
-              <div className={`w-10 h-10 rounded-xl ${stat.color} flex items-center justify-center`}>
+              <div
+                className={`w-10 h-10 rounded-xl ${stat.color} flex items-center justify-center`}
+              >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                  />
                 </svg>
               </div>
             </div>
             <div className="text-3xl font-bold mb-1">{stat.value}</div>
-            <div className="text-sm font-medium" style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}>
+            <div
+              className="text-sm font-medium"
+              style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}
+            >
               {stat.title}
             </div>
           </div>

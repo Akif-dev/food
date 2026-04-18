@@ -21,6 +21,8 @@ interface CartContextType {
   removeItem: (id: string) => void;
   clearCart: () => void;
   cartCount: number;
+  orderPlacing: boolean;
+  setOrderPlacing: (placing: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -28,6 +30,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [mounted, setMounted] = useState(false);
+  const [orderPlacing, setOrderPlacing] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -78,7 +81,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const cartCount = cart.reduce((sum, c) => sum + c.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, updateQty, removeItem, clearCart, cartCount }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        updateQty,
+        removeItem,
+        clearCart,
+        cartCount,
+        orderPlacing,
+        setOrderPlacing,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );

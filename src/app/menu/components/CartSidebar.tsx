@@ -1,6 +1,7 @@
 'use client';
 
 import AppImage from '@/components/ui/AppImage';
+import Loading from '@/components/ui/Loading';
 import Link from 'next/link';
 
 interface CartItem {
@@ -22,6 +23,7 @@ interface CartSidebarProps {
   onUpdateQty: (id: string, delta: number) => void;
   onRemove: (id: string) => void;
   isDark: boolean;
+  orderPlacing?: boolean;
 }
 
 export default function CartSidebar({
@@ -31,6 +33,7 @@ export default function CartSidebar({
   onUpdateQty,
   onRemove,
   isDark,
+  orderPlacing = false,
 }: CartSidebarProps) {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const deliveryFee = subtotal > 2000 ? 0 : 200;
@@ -86,7 +89,19 @@ export default function CartSidebar({
 
         {/* Items */}
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
-          {items.length === 0 ? (
+          {orderPlacing ? (
+            <div className="flex flex-col items-center justify-center h-full gap-4 py-16">
+              <Loading size="md" />
+              <div className="text-center">
+                <p className="font-bold text-base" style={{ color: textPrimary }}>
+                  Placing your order...
+                </p>
+                <p className="text-sm mt-1" style={{ color: textMuted }}>
+                  Please wait while we process your order
+                </p>
+              </div>
+            </div>
+          ) : items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full gap-4 py-16">
               <div className="text-6xl">🛒</div>
               <div className="text-center">

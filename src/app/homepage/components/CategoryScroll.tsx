@@ -81,12 +81,6 @@ export default function CategoryScroll({ isDark }: CategoryScrollProps) {
     );
   }
 
-  const allCategories = [
-    { id: 0, name: 'All Items', description: '', icon: '🍽️', created_at: '', updated_at: '' },
-
-    ...categories,
-  ];
-
   return (
     <section className="py-20" style={{ background: isDark ? '#0A0A0F' : '#FAF8F3' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

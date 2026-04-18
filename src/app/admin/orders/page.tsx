@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase, Order } from '@/lib/supabase';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -10,11 +10,7 @@ export default function OrderManagement() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
 
-  useEffect(() => {
-    fetchOrders();
-  }, [filter]);
-
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     try {
       let query = supabase.from('orders').select('*').order('created_at', { ascending: false });
 
@@ -30,7 +26,11 @@ export default function OrderManagement() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchOrders();
+  }, [fetchOrders]);
 
   const updateOrderStatus = async (orderId: number, status: string) => {
     try {

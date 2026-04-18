@@ -12,7 +12,8 @@ import { useCart } from '@/contexts/CartContext';
 export default function CheckoutPage() {
   const router = useRouter();
   const { isDark, toggleTheme } = useTheme();
-  const { cart, updateQty, removeItem, clearCart, cartCount } = useCart();
+  const { cart, updateQty, removeItem, clearCart, cartCount, orderPlacing, setOrderPlacing } =
+    useCart();
   const [deliveryType, setDeliveryType] = useState<'delivery' | 'pickup'>('delivery');
 
   const bg = isDark ? '#0A0A0F' : '#FAF8F3';
@@ -52,7 +53,7 @@ export default function CheckoutPage() {
               Complete Your <span className="gradient-text-amber italic">Order</span>
             </h1>
             <p className={`mt-3 text-base ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
-              You're almost there! Review your order and complete checkout.
+              You&apos;re almost there! Review your order and complete checkout.
             </p>
 
             {/* Steps Indicator */}
@@ -135,6 +136,8 @@ export default function CheckoutPage() {
                     clearCart();
                     router.push(`/order-status?orderId=${orderData.orderId}`);
                   }}
+                  orderPlacing={orderPlacing}
+                  setOrderPlacing={setOrderPlacing}
                 />
               </div>
 

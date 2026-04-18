@@ -111,9 +111,7 @@ export default function CategoriesManagement() {
         </button>
       </div>
 
-      <div
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {categories.map((category) => (
           <div
             key={category.id}
@@ -129,20 +127,29 @@ export default function CategoriesManagement() {
                 <button
                   onClick={() => handleEdit(category)}
                   className="p-2 rounded-lg transition-colors"
-                  style={{ background: isDark ? 'bg-blue-500/15 text-blue-500' : 'bg-blue-100 text-blue-700' }}
+                  style={{
+                    background: isDark
+                      ? 'bg-blue-500/15 text-blue-500'
+                      : 'bg-blue-100 text-blue-700',
+                  }}
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(category.id)}
                   className="p-2 rounded-lg transition-colors"
-                  style={{ background: isDark ? 'bg-red-500/15 text-red-500' : 'bg-red-100 text-red-700' }}
+                  style={{
+                    background: isDark ? 'bg-red-500/15 text-red-500' : 'bg-red-100 text-red-700',
+                  }}
                 >
                   Delete
                 </button>
               </div>
             </div>
-            <h3 className="font-bold text-lg mb-2" style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}>
+            <h3
+              className="font-bold text-lg mb-2"
+              style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}
+            >
               {category.name}
             </h3>
             <p className="text-sm" style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}>
@@ -153,17 +160,26 @@ export default function CategoriesManagement() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.5)' }}
+        >
           <div
             className="w-full max-w-lg rounded-2xl p-6"
             style={{ background: isDark ? '#111118' : '#FFFFFF' }}
           >
-            <h2 className="text-2xl font-bold mb-6" style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}>
+            <h2
+              className="text-2xl font-bold mb-6"
+              style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}
+            >
               {editingCategory ? 'Edit Category' : 'Add Category'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: isDark ? 'rgba(255,255,255,0.7)' : '#6B6B7A' }}>
+                <label
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: isDark ? 'rgba(255,255,255,0.7)' : '#6B6B7A' }}
+                >
                   Name
                 </label>
                 <input
@@ -180,7 +196,10 @@ export default function CategoriesManagement() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: isDark ? 'rgba(255,255,255,0.7)' : '#6B6B7A' }}>
+                <label
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: isDark ? 'rgba(255,255,255,0.7)' : '#6B6B7A' }}
+                >
                   Description
                 </label>
                 <textarea
@@ -196,7 +215,10 @@ export default function CategoriesManagement() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2" style={{ color: isDark ? 'rgba(255,255,255,0.7)' : '#6B6B7A' }}>
+                <label
+                  className="block text-sm font-medium mb-2"
+                  style={{ color: isDark ? 'rgba(255,255,255,0.7)' : '#6B6B7A' }}
+                >
                   Icon (emoji)
                 </label>
                 <input

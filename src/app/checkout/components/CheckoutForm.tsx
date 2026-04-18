@@ -34,6 +34,10 @@ interface CheckoutFormProps {
   onDeliveryTypeChange: (type: 'delivery' | 'pickup') => void;
 
   onOrderSuccess: (orderData: any) => void;
+
+  orderPlacing: boolean;
+
+  setOrderPlacing: (placing: boolean) => void;
 }
 
 export default function CheckoutForm({
@@ -46,6 +50,8 @@ export default function CheckoutForm({
   onDeliveryTypeChange,
 
   onOrderSuccess,
+
+  setOrderPlacing,
 }: CheckoutFormProps) {
   const [form, setForm] = useState({
     name: '',
@@ -87,8 +93,6 @@ export default function CheckoutForm({
 
   const inputBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
 
-  const inputFocus = isDark ? 'rgba(245,158,11,0.25)' : 'rgba(245,158,11,0.2)';
-
   const inputClass = `w-full px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-300`;
 
   const validate = () => {
@@ -116,6 +120,8 @@ export default function CheckoutForm({
 
     setSubmitting(true);
 
+    setOrderPlacing(true);
+
     try {
       // Prepare order items
 
@@ -137,7 +143,7 @@ export default function CheckoutForm({
         spice_level: item.spiceLevel,
       }));
 
-      console.log('Submitting order:', {
+      console.warn('Submitting order:', {
         customer_name: form.name,
 
         customer_phone: form.phone,
@@ -199,7 +205,7 @@ export default function CheckoutForm({
         throw error;
       }
 
-      console.log('Order saved successfully:', data);
+      console.warn('Order saved successfully:', data);
 
       const orderNumber = `RO-${data.id.toString().padStart(6, '0')}`;
 
@@ -210,6 +216,7 @@ export default function CheckoutForm({
       alert(`Failed to place order: ${error.message || 'Unknown error'}. Please try again.`);
     } finally {
       setSubmitting(false);
+      setOrderPlacing(false);
     }
   };
 
@@ -225,7 +232,7 @@ export default function CheckoutForm({
 
       .join('\n');
 
-    const msg = `🍽️ *New Order from RestoOrder*\n\n*Customer:* ${form.name}\n*Phone:* ${form.phone}\n*Type:* ${deliveryType === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}${deliveryType === 'delivery' ? `\n*Address:* ${form.address}, ${form.area}, ${form.city}` : ''}\n\n*Order Details:*\n${orderText}\n\n*Subtotal:* ₨${subtotal.toLocaleString()}\n*Delivery:* ${deliveryFee === 0 ? 'FREE' : `₨${deliveryFee}`}\n*Tax:* ₨${tax.toLocaleString()}\n*Total:* ₨${total.toLocaleString()}\n\n*Payment:* ${form.paymentMethod === 'cod' ? 'Cash on Delivery' : form.paymentMethod === 'card' ? 'Card' : 'Bank Transfer'}${form.notes ? `\n\n*Notes:* ${form.notes}` : ''}`;
+    const msg = `🍽️ *New Order from Ice n Spice*\n\n*Customer:* ${form.name}\n*Phone:* ${form.phone}\n*Type:* ${deliveryType === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}${deliveryType === 'delivery' ? `\n*Address:* ${form.address}, ${form.area}, ${form.city}` : ''}\n\n*Order Details:*\n${orderText}\n\n*Subtotal:* ₨${subtotal.toLocaleString()}\n*Delivery:* ${deliveryFee === 0 ? 'FREE' : `₨${deliveryFee}`}\n*Tax:* ₨${tax.toLocaleString()}\n*Total:* ₨${total.toLocaleString()}\n\n*Payment:* ${form.paymentMethod === 'cod' ? 'Cash on Delivery' : form.paymentMethod === 'card' ? 'Card' : 'Bank Transfer'}${form.notes ? `\n\n*Notes:* ${form.notes}` : ''}`;
 
     window.open(`https://wa.me/923001234567?text=${encodeURIComponent(msg)}`, '_blank');
   };

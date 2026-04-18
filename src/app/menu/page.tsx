@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import MenuGrid from './components/MenuGrid';
 import CartSidebar from './components/CartSidebar';
+import Loading from '@/components/ui/Loading';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useCart, CartItem } from '@/contexts/CartContext';
 
@@ -15,7 +16,14 @@ function MenuContent() {
   const initialCategory = searchParams.get('category') || 'all';
 
   const { isDark, toggleTheme } = useTheme();
-  const { cart, addToCart: addToCartGlobal, updateQty, removeItem, cartCount } = useCart();
+  const {
+    cart,
+    addToCart: addToCartGlobal,
+    updateQty,
+    removeItem,
+    cartCount,
+    orderPlacing,
+  } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
@@ -114,6 +122,7 @@ function MenuContent() {
         onUpdateQty={updateQty}
         onRemove={removeItem}
         isDark={isDark}
+        orderPlacing={orderPlacing}
       />
 
       {/* Floating Cart Button (mobile) */}
@@ -160,12 +169,10 @@ export default function MenuPage() {
     <Suspense
       fallback={
         <div
-          className="min-h-screen flex items-center justify-center"
-          style={{ background: '#0A0A0F' }}
+          style={{ background: '#0A0A0F', minHeight: '100vh' }}
+          className="flex items-center justify-center"
         >
-          <div className="text-amber-500 text-2xl animate-pulse font-display font-black">
-            Loading Menu...
-          </div>
+          <Loading size="lg" />
         </div>
       }
     >

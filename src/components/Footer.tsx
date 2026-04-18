@@ -31,19 +31,19 @@ export default function Footer({ isDark = true }: FooterProps) {
               Home
             </a>
 
-            <a href="/menu" className={`hover:text-amber-400 transition-colors`}>
-              Menu
+            <a href="/about" className={`hover:text-amber-400 transition-colors`}>
+              About
             </a>
 
-            <a href="/checkout" className={`hover:text-amber-400 transition-colors`}>
-              Checkout
+            <a href="/contact" className={`hover:text-amber-400 transition-colors`}>
+              Contact
             </a>
 
-            <a href="#" className={`hover:text-amber-400 transition-colors`}>
+            <a href="/privacy" className={`hover:text-amber-400 transition-colors`}>
               Privacy
             </a>
 
-            <a href="#" className={`hover:text-amber-400 transition-colors`}>
+            <a href="/terms" className={`hover:text-amber-400 transition-colors`}>
               Terms
             </a>
           </div>
@@ -75,10 +75,19 @@ export default function Footer({ isDark = true }: FooterProps) {
         </div>
 
         <div
-          className={`mt-6 pt-4 border-t text-center text-xs ${textMuted}`}
+          className={`mt-6 pt-4 border-t text-center text-sm ${textMuted}`}
           style={{ borderColor }}
         >
-          © 2026 RestoOrder. All rights reserved. Crafted with ❤️ for food lovers.
+          © 2026 Ice n Spice. All rights reserved. Designed and Developed by{' '}
+          <a
+            href="https://akifkhan.online/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-bold hover:text-amber-500 transition-colors duration-300 underline underline-offset-4"
+          >
+            Akif Khan
+          </a>
+          .
         </div>
       </div>
     </footer>

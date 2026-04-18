@@ -40,8 +40,8 @@ export default function Header({
 
   const navLinks = [
     { href: '/homepage', label: 'Home', icon: 'HomeIcon' },
-    { href: '/menu', label: 'Menu', icon: 'ClipboardDocumentListIcon' },
-    { href: '/checkout', label: 'Checkout', icon: 'ShoppingBagIcon' },
+    { href: '/about', label: 'About', icon: 'InformationCircleIcon' },
+    { href: '/contact', label: 'Contact', icon: 'PhoneIcon' },
   ];
 
   const glassClass = isDark

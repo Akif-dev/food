@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 
 interface OrderSuccessProps {
@@ -18,7 +18,7 @@ export default function OrderSuccess({ orderId, isDark }: OrderSuccessProps) {
     setTimeout(() => setShow(true), 100);
   }, []);
 
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     if (!orderId) return;
     setLoading(true);
     const { data } = await supabase.from('orders').select('*').eq('id', orderId).single();
@@ -26,12 +26,12 @@ export default function OrderSuccess({ orderId, isDark }: OrderSuccessProps) {
       setOrderData(data);
     }
     setLoading(false);
-  };
+  }, [orderId]);
 
   useEffect(() => {
     if (!orderId) return;
     fetchOrder();
-  }, [orderId]);
+  }, [fetchOrder, orderId]);
 
   const textPrimary = isDark ? '#F5F5F0' : '#1A1A24';
   const textMuted = isDark ? 'rgba(245,245,240,0.5)' : '#6B6B7A';

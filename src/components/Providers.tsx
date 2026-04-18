@@ -7,9 +7,7 @@ import { ReactNode } from 'react';
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <ThemeProvider>
-      <CartProvider>
-        {children}
-      </CartProvider>
+      <CartProvider>{children}</CartProvider>
     </ThemeProvider>
   );
 }
