@@ -11,7 +11,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: 'Ice n Spice',
-  description: 'A boilerplate project with Next.js and Tailwind CSS',
+  description:
+    'Ice N Spice is a main-stream creative cuisine restaurant with the aim of providing you with the best quality food and services. ',
   icons: {
     icon: [{ url: '/assets/images/app_logo.png', type: 'image/x-icon' }],
   },
