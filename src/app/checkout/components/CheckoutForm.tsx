@@ -1,135 +1,212 @@
 'use client';
 
 import { useState } from 'react';
+
 import { supabase } from '@/lib/supabase';
 
 interface CartItem {
   id: string;
+
   itemId: number;
+
   name: string;
+
   price: number;
+
   quantity: number;
+
   image: string;
+
   variation?: string;
+
   addons: string[];
+
   spiceLevel?: string;
 }
 
 interface CheckoutFormProps {
   items: CartItem[];
+
   isDark: boolean;
+
   deliveryType: 'delivery' | 'pickup';
+
   onDeliveryTypeChange: (type: 'delivery' | 'pickup') => void;
+
   onOrderSuccess: (orderData: any) => void;
 }
 
 export default function CheckoutForm({
   items,
+
   isDark,
+
   deliveryType,
+
   onDeliveryTypeChange,
+
   onOrderSuccess,
 }: CheckoutFormProps) {
   const [form, setForm] = useState({
     name: '',
+
     phone: '',
+
     email: '',
+
     address: '',
+
     area: '',
+
     city: 'Karachi',
+
     notes: '',
+
     paymentMethod: 'cod',
   });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
+
   const [submitting, setSubmitting] = useState(false);
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
   const deliveryFee = deliveryType === 'delivery' ? (subtotal > 2000 ? 0 : 200) : 0;
+
   const tax = Math.round(subtotal * 0.05);
+
   const total = subtotal + deliveryFee + tax;
 
   const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+
   const textPrimary = isDark ? '#F5F5F0' : '#1A1A24';
+
   const textMuted = isDark ? 'rgba(245,245,240,0.5)' : '#6B6B7A';
+
   const sectionBg = isDark ? '#111118' : '#FFFFFF';
+
   const inputBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.03)';
+
   const inputFocus = isDark ? 'rgba(245,158,11,0.25)' : 'rgba(245,158,11,0.2)';
 
   const inputClass = `w-full px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all duration-300`;
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
+
     if (!form.name.trim()) newErrors.name = 'Name is required';
+
     if (!form.phone.trim() || form.phone.length < 10)
       newErrors.phone = 'Valid phone number required';
+
     if (deliveryType === 'delivery' && !form.address.trim())
       newErrors.address = 'Delivery address is required';
+
     setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!validate()) return;
+
     if (items.length === 0) return;
+
     setSubmitting(true);
 
     try {
       // Prepare order items
+
       const orderItems = items.map((item) => ({
         id: `${item.id}-${Date.now()}`,
+
         menu_item_id: item.itemId,
+
         name: item.name,
+
         price: item.price,
+
         quantity: item.quantity,
+
         variation: item.variation,
+
         addons: item.addons,
+
         spice_level: item.spiceLevel,
       }));
 
       console.log('Submitting order:', {
         customer_name: form.name,
+
         customer_phone: form.phone,
+
         delivery_type: deliveryType,
+
         items: orderItems,
+
         subtotal,
+
         delivery_fee: deliveryFee,
+
         tax,
+
         total,
       });
 
       // Save order to Supabase
+
       const { data, error } = await supabase
+
         .from('orders')
+
         .insert({
           customer_name: form.name,
+
           customer_phone: form.phone,
+
           customer_email: form.email || null,
+
           delivery_address: deliveryType === 'delivery' ? form.address : null,
+
           delivery_type: deliveryType,
+
           items: orderItems,
+
           subtotal,
+
           delivery_fee: deliveryFee,
+
           tax,
+
           total,
+
           status: 'pending',
+
           payment_method: form.paymentMethod,
+
           special_instructions: form.notes || null,
         })
+
         .select()
+
         .single();
 
       if (error) {
         console.error('Supabase error:', error);
+
         throw error;
       }
 
       console.log('Order saved successfully:', data);
 
       const orderNumber = `RO-${data.id.toString().padStart(6, '0')}`;
+
       onOrderSuccess({ ...form, deliveryType, total, orderNumber, items, orderId: data.id });
     } catch (error: any) {
       console.error('Error saving order:', error);
+
       alert(`Failed to place order: ${error.message || 'Unknown error'}. Please try again.`);
     } finally {
       setSubmitting(false);
@@ -138,25 +215,33 @@ export default function CheckoutForm({
 
   const handleWhatsApp = () => {
     if (!validate()) return;
+
     const orderText = items
+
       .map(
         (i) =>
           `• ${i.quantity}x ${i.name}${i.variation ? ` (${i.variation})` : ''}${i.addons.length ? ` [+${i.addons.join(', ')}]` : ''} - ₨${(i.price * i.quantity).toLocaleString()}`
       )
+
       .join('\n');
-    const msg = `🍽️ *New Order from Ice n Spice*\n\n*Customer:* ${form.name}\n*Phone:* ${form.phone}\n*Type:* ${deliveryType === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}${deliveryType === 'delivery' ? `\n*Address:* ${form.address}, ${form.area}, ${form.city}` : ''}\n\n*Order Details:*\n${orderText}\n\n*Subtotal:* ₨${subtotal.toLocaleString()}\n*Delivery:* ${deliveryFee === 0 ? 'FREE' : `₨${deliveryFee}`}\n*Tax:* ₨${tax.toLocaleString()}\n*Total:* ₨${total.toLocaleString()}\n\n*Payment:* ${form.paymentMethod === 'cod' ? 'Cash on Delivery' : form.paymentMethod === 'card' ? 'Card' : 'Bank Transfer'}${form.notes ? `\n\n*Notes:* ${form.notes}` : ''}`;
+
+    const msg = `🍽️ *New Order from RestoOrder*\n\n*Customer:* ${form.name}\n*Phone:* ${form.phone}\n*Type:* ${deliveryType === 'delivery' ? '🚚 Delivery' : '🏪 Pickup'}${deliveryType === 'delivery' ? `\n*Address:* ${form.address}, ${form.area}, ${form.city}` : ''}\n\n*Order Details:*\n${orderText}\n\n*Subtotal:* ₨${subtotal.toLocaleString()}\n*Delivery:* ${deliveryFee === 0 ? 'FREE' : `₨${deliveryFee}`}\n*Tax:* ₨${tax.toLocaleString()}\n*Total:* ₨${total.toLocaleString()}\n\n*Payment:* ${form.paymentMethod === 'cod' ? 'Cash on Delivery' : form.paymentMethod === 'card' ? 'Card' : 'Bank Transfer'}${form.notes ? `\n\n*Notes:* ${form.notes}` : ''}`;
+
     window.open(`https://wa.me/923001234567?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   const inputStyle = (field: string) => ({
     background: errors[field] ? 'rgba(239,68,68,0.08)' : inputBg,
+
     border: `1.5px solid ${errors[field] ? '#EF4444' : borderColor}`,
+
     color: textPrimary,
   });
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
       {/* Delivery Type */}
+
       <div
         className="rounded-3xl overflow-hidden"
         style={{ background: sectionBg, border: `1px solid ${borderColor}` }}
@@ -166,12 +251,15 @@ export default function CheckoutForm({
             Delivery Method
           </h2>
         </div>
+
         <div className="px-6 py-5 grid grid-cols-2 gap-3">
           {[
             { id: 'delivery', label: 'Home Delivery', icon: '🚚', desc: 'Delivered to your door' },
+
             { id: 'pickup', label: 'Self Pickup', icon: '🏪', desc: 'Pick up from restaurant' },
           ].map((opt) => {
             const isSelected = deliveryType === opt.id;
+
             return (
               <button
                 key={opt.id}
@@ -180,17 +268,21 @@ export default function CheckoutForm({
                 className={`p-4 rounded-2xl text-left transition-all duration-300 ${isSelected ? 'scale-105' : 'hover:scale-102'}`}
                 style={{
                   background: isSelected ? 'rgba(245,158,11,0.12)' : inputBg,
+
                   border: `1.5px solid ${isSelected ? '#F59E0B' : borderColor}`,
+
                   boxShadow: isSelected ? '0 4px 20px rgba(245,158,11,0.2)' : 'none',
                 }}
               >
                 <div className="text-2xl mb-2">{opt.icon}</div>
+
                 <div
                   className="text-sm font-bold"
                   style={{ color: isSelected ? '#F59E0B' : textPrimary }}
                 >
                   {opt.label}
                 </div>
+
                 <div className="text-xs mt-0.5" style={{ color: textMuted }}>
                   {opt.desc}
                 </div>
@@ -201,6 +293,7 @@ export default function CheckoutForm({
       </div>
 
       {/* Customer Details */}
+
       <div
         className="rounded-3xl overflow-hidden"
         style={{ background: sectionBg, border: `1px solid ${borderColor}` }}
@@ -210,6 +303,7 @@ export default function CheckoutForm({
             Your Details
           </h2>
         </div>
+
         <div className="px-6 py-5 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -219,6 +313,7 @@ export default function CheckoutForm({
               >
                 Full Name *
               </label>
+
               <input
                 type="text"
                 placeholder="Ahmed Raza"
@@ -228,8 +323,10 @@ export default function CheckoutForm({
                 style={inputStyle('name')}
                 aria-label="Full name"
               />
+
               {errors.name && <p className="text-red-400 text-xs mt-1">{errors.name}</p>}
             </div>
+
             <div>
               <label
                 className="block text-xs font-bold mb-1.5 uppercase tracking-wide"
@@ -237,6 +334,7 @@ export default function CheckoutForm({
               >
                 Phone Number *
               </label>
+
               <input
                 type="tel"
                 placeholder="+92 300 1234567"
@@ -246,6 +344,7 @@ export default function CheckoutForm({
                 style={inputStyle('phone')}
                 aria-label="Phone number"
               />
+
               {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
             </div>
           </div>
@@ -257,6 +356,7 @@ export default function CheckoutForm({
             >
               Email Address
             </label>
+
             <input
               type="email"
               placeholder="ahmed@example.com"
@@ -265,7 +365,9 @@ export default function CheckoutForm({
               className={inputClass}
               style={{
                 background: inputBg,
+
                 border: `1.5px solid ${borderColor}`,
+
                 color: textPrimary,
               }}
               aria-label="Email address"
@@ -281,6 +383,7 @@ export default function CheckoutForm({
                 >
                   Street Address *
                 </label>
+
                 <input
                   type="text"
                   placeholder="House No. 12, Street 5, DHA Phase 6"
@@ -290,8 +393,10 @@ export default function CheckoutForm({
                   style={inputStyle('address')}
                   aria-label="Street address"
                 />
+
                 {errors.address && <p className="text-red-400 text-xs mt-1">{errors.address}</p>}
               </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label
@@ -300,6 +405,7 @@ export default function CheckoutForm({
                   >
                     Area / Locality
                   </label>
+
                   <input
                     type="text"
                     placeholder="DHA, Gulshan, PECHS..."
@@ -308,12 +414,15 @@ export default function CheckoutForm({
                     className={inputClass}
                     style={{
                       background: inputBg,
+
                       border: `1.5px solid ${borderColor}`,
+
                       color: textPrimary,
                     }}
                     aria-label="Area"
                   />
                 </div>
+
                 <div>
                   <label
                     className="block text-xs font-bold mb-1.5 uppercase tracking-wide"
@@ -321,13 +430,16 @@ export default function CheckoutForm({
                   >
                     City
                   </label>
+
                   <select
                     value={form.city}
                     onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
                     className={inputClass}
                     style={{
                       background: inputBg,
+
                       border: `1.5px solid ${borderColor}`,
+
                       color: textPrimary,
                     }}
                     aria-label="City"
@@ -356,6 +468,7 @@ export default function CheckoutForm({
             >
               Special Instructions
             </label>
+
             <textarea
               placeholder="Any special requests? Allergies? Preferred spice level?"
               value={form.notes}
@@ -364,7 +477,9 @@ export default function CheckoutForm({
               className={`${inputClass} resize-none`}
               style={{
                 background: inputBg,
+
                 border: `1.5px solid ${borderColor}`,
+
                 color: textPrimary,
               }}
               aria-label="Special instructions"
@@ -374,6 +489,7 @@ export default function CheckoutForm({
       </div>
 
       {/* Payment Method */}
+
       <div
         className="rounded-3xl overflow-hidden"
         style={{ background: sectionBg, border: `1px solid ${borderColor}` }}
@@ -383,23 +499,33 @@ export default function CheckoutForm({
             Payment Method
           </h2>
         </div>
+
         <div className="px-6 py-5 space-y-3">
           {[
             {
               id: 'cod',
+
               label: 'Cash on Delivery',
+
               icon: '💵',
+
               desc: 'Pay when your order arrives',
             },
+
             {
               id: 'card',
+
               label: 'Debit / Credit Card',
+
               icon: '💳',
+
               desc: 'Visa, Mastercard, UnionPay',
             },
+
             { id: 'bank', label: 'Bank Transfer', icon: '🏦', desc: 'JazzCash, EasyPaisa, HBL' },
           ].map((method) => {
             const isSelected = form.paymentMethod === method.id;
+
             return (
               <div
                 key={method.id}
@@ -407,6 +533,7 @@ export default function CheckoutForm({
                 className="flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all duration-300"
                 style={{
                   background: isSelected ? 'rgba(245,158,11,0.08)' : inputBg,
+
                   border: `1.5px solid ${isSelected ? '#F59E0B' : borderColor}`,
                 }}
                 role="radio"
@@ -417,6 +544,7 @@ export default function CheckoutForm({
                 }
               >
                 <div className="text-2xl">{method.icon}</div>
+
                 <div className="flex-1">
                   <div
                     className="text-sm font-bold"
@@ -424,10 +552,12 @@ export default function CheckoutForm({
                   >
                     {method.label}
                   </div>
+
                   <div className="text-xs mt-0.5" style={{ color: textMuted }}>
                     {method.desc}
                   </div>
                 </div>
+
                 <div
                   className="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
                   style={{ borderColor: isSelected ? '#F59E0B' : borderColor }}
@@ -441,6 +571,7 @@ export default function CheckoutForm({
       </div>
 
       {/* Action Buttons */}
+
       <div className="space-y-3">
         <button
           type="submit"
@@ -448,6 +579,7 @@ export default function CheckoutForm({
           className="w-full py-4 rounded-2xl font-bold text-white text-base transition-all duration-300 hover:scale-105 disabled:opacity-60 disabled:scale-100 flex items-center justify-center gap-3"
           style={{
             background: submitting ? '#10B981' : 'linear-gradient(135deg, #F59E0B, #F97316)',
+
             boxShadow: '0 8px 30px rgba(245,158,11,0.3)',
           }}
         >

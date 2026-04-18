@@ -1,23 +1,29 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+
 import Header from '@/components/Header';
+
 import Footer from '@/components/Footer';
+
 import HeroSlider from './components/HeroSlider';
-import CategoryScroll from './components/CategoryScroll';
-import FeaturedItems from './components/FeaturedItems';
-import WhyChooseUs from './components/WhyChooseUs';
-import Testimonials from './components/Testimonials';
+
+import MenuGrid from '../menu/components/MenuGrid';
+
 import { useTheme } from '@/contexts/ThemeContext';
+
 import { useCart, CartItem } from '@/contexts/CartContext';
 
 export default function HomePage() {
   const { isDark, toggleTheme } = useTheme();
+
   const { cart, addToCart: addToCartGlobal, cartCount } = useCart();
+
   const [toast, setToast] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
     setToast(msg);
+
     setTimeout(() => setToast(null), 2500);
   };
 
@@ -25,18 +31,29 @@ export default function HomePage() {
     (item: any) => {
       const cartItem: CartItem = {
         id: `${item.id}-${Date.now()}`,
+
         itemId: item.id,
+
         name: item.name,
+
         price: item.price,
+
         quantity: 1,
+
         image: item.image,
+
         variation: undefined,
+
         addons: [],
+
         spiceLevel: undefined,
       };
+
       addToCartGlobal(cartItem);
+
       showToast(`${item.name} added to cart!`);
     },
+
     [addToCartGlobal]
   );
 
@@ -53,16 +70,16 @@ export default function HomePage() {
 
       <main>
         <HeroSlider isDark={isDark} />
-        <CategoryScroll isDark={isDark} />
-        <FeaturedItems isDark={isDark} onAddToCart={addToCart} />
-        <WhyChooseUs isDark={isDark} />
-        <Testimonials isDark={isDark} />
+
+        <MenuGrid isDark={isDark} onAddToCart={addToCart} />
 
         {/* Marquee Banner */}
+
         <div
           className="py-5 overflow-hidden border-y"
           style={{
             background: 'linear-gradient(135deg, #F59E0B, #F97316)',
+
             borderColor: 'rgba(245,158,11,0.3)',
           }}
         >
@@ -71,12 +88,19 @@ export default function HomePage() {
               <div key={ri} className="flex items-center gap-8 pr-8">
                 {[
                   '🍔 Wagyu Burgers',
+
                   '🍕 Artisan Pizza',
+
                   '🍣 Fresh Sushi',
+
                   '🥩 Premium Grills',
+
                   '🍰 Handcrafted Desserts',
+
                   '⚡ 25-Min Delivery',
+
                   '🌿 Farm Fresh',
+
                   '💎 Premium Quality',
                 ].map((item, i) => (
                   <span
@@ -84,6 +108,7 @@ export default function HomePage() {
                     className="text-white font-black text-sm uppercase tracking-widest whitespace-nowrap flex items-center gap-4"
                   >
                     {item}
+
                     <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
                   </span>
                 ))}
@@ -93,6 +118,7 @@ export default function HomePage() {
         </div>
 
         {/* Final CTA Section */}
+
         <section
           className="py-24 relative overflow-hidden"
           style={{ background: isDark ? '#0A0A0F' : '#FAF8F3' }}
@@ -104,29 +130,35 @@ export default function HomePage() {
                 'radial-gradient(ellipse at 50% 50%, rgba(245,158,11,0.06) 0%, transparent 70%)',
             }}
           />
+
           <div className="relative max-w-3xl mx-auto text-center px-4">
             <div className="text-6xl mb-6">🍽️</div>
+
             <h2
               className={`text-4xl lg:text-5xl font-display font-black mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}
             >
               Ready to <span className="gradient-text-amber italic">Order?</span>
             </h2>
+
             <p className={`text-lg mb-8 ${isDark ? 'text-white/50' : 'text-gray-500'}`}>
               Browse our full menu of 200+ dishes and place your order in under 2 minutes.
             </p>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 href="/menu"
                 className="px-10 py-4 rounded-2xl font-bold text-white text-base transition-all duration-300 hover:scale-105 hover:shadow-2xl"
                 style={{
                   background: 'linear-gradient(135deg, #F59E0B, #F97316)',
+
                   boxShadow: '0 8px 30px rgba(245,158,11,0.3)',
                 }}
               >
                 Browse Full Menu →
               </a>
+
               <a
-                href={`https://wa.me/923001234567?text=Hi! I'd like to place an order from Ice n Spice`}
+                href={`https://wa.me/923001234567?text=Hi! I'd like to place an order from RestoOrder`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="whatsapp-btn px-10 py-4 rounded-2xl font-bold text-white text-base flex items-center justify-center gap-2"
@@ -144,10 +176,12 @@ export default function HomePage() {
       <Footer isDark={isDark} />
 
       {/* Toast */}
+
       {toast && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 toast">
           <div className="glass-card-dark px-6 py-3 rounded-2xl text-white font-semibold text-sm flex items-center gap-3 border border-amber-500/30 shadow-neon-amber">
             <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+
             {toast}
           </div>
         </div>

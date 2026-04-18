@@ -1,40 +1,67 @@
 'use client';
 
 import { useState } from 'react';
+
 import AppImage from '@/components/ui/AppImage';
 
 const testimonials = [
   {
     id: 1,
+
     name: 'Ayesha Raza',
+
     role: 'Food Blogger',
+
     avatar: 'https://images.unsplash.com/photo-1684576656380-934ef5136194',
+
     alt: 'Ayesha Raza smiling portrait',
-    text: 'Ice n Spice completely changed how I think about food delivery. The Wagyu Smash Burger arrived looking exactly like the photo — I literally gasped. This is restaurant quality at home.',
+
+    text: 'RestoOrder completely changed how I think about food delivery. The Wagyu Smash Burger arrived looking exactly like the photo — I literally gasped. This is restaurant quality at home.',
+
     rating: 5,
+
     order: 'Wagyu Smash Burger',
+
     date: '2 days ago',
   },
+
   {
     id: 2,
+
     name: 'Bilal Mahmood',
+
     role: 'Software Engineer',
+
     avatar: 'https://img.rocket.new/generatedImages/rocket_gen_img_1a84db55c-1763293803948.png',
+
     alt: 'Bilal Mahmood professional headshot',
+
     text: 'I order here at least 3 times a week. The Dragon Roll Platter is insane — 12 pieces of pure perfection. 25-minute delivery, still cold and fresh. Absolutely unmatched.',
+
     rating: 5,
+
     order: 'Dragon Roll Platter',
+
     date: '1 week ago',
   },
+
   {
     id: 3,
+
     name: 'Sana Khan',
+
     role: 'Chef & Entrepreneur',
+
     avatar: 'https://images.unsplash.com/photo-1507532459814-b32f63cf4497',
+
     alt: 'Sana Khan warm smile portrait',
-    text: "As a professional chef, I am extremely picky. Ice n Spice's Truffle Margherita uses actual San Marzano tomatoes and buffalo mozzarella. I can taste the difference. Extraordinary.",
+
+    text: "As a professional chef, I am extremely picky. RestoOrder's Truffle Margherita uses actual San Marzano tomatoes and buffalo mozzarella. I can taste the difference. Extraordinary.",
+
     rating: 5,
+
     order: 'Truffle Margherita',
+
     date: '3 days ago',
   },
 ];
@@ -52,13 +79,16 @@ export default function Testimonials({ isDark }: TestimonialsProps) {
         <div className="text-center mb-14">
           <div className="flex items-center justify-center gap-2 mb-3">
             <div className="w-8 h-1 rounded-full bg-amber-500" />
+
             <span
               className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-white/40' : 'text-gray-400'}`}
             >
               Reviews
             </span>
+
             <div className="w-8 h-1 rounded-full bg-amber-500" />
           </div>
+
           <h2
             className={`text-3xl lg:text-4xl font-display font-black ${isDark ? 'text-white' : 'text-gray-900'}`}
           >
@@ -83,6 +113,7 @@ export default function Testimonials({ isDark }: TestimonialsProps) {
               style={active === i ? { borderColor: 'rgba(245,158,11,0.3)' } : {}}
             >
               {/* Stars */}
+
               <div className="flex gap-1 mb-4">
                 {[...Array(t.rating)].map((_, j) => (
                   <svg
@@ -97,6 +128,7 @@ export default function Testimonials({ isDark }: TestimonialsProps) {
               </div>
 
               {/* Quote */}
+
               <p
                 className={`text-sm leading-relaxed mb-6 ${isDark ? 'text-white/70' : 'text-gray-600'}`}
               >
@@ -104,6 +136,7 @@ export default function Testimonials({ isDark }: TestimonialsProps) {
               </p>
 
               {/* Order tag */}
+
               <div className="flex items-center gap-2 mb-5">
                 <span className="text-xs font-semibold text-amber-500 bg-amber-500/10 px-3 py-1 rounded-full">
                   📦 {t.order}
@@ -111,6 +144,7 @@ export default function Testimonials({ isDark }: TestimonialsProps) {
               </div>
 
               {/* Author */}
+
               <div
                 className="flex items-center gap-3 pt-5 border-t"
                 style={{ borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)' }}
@@ -118,14 +152,17 @@ export default function Testimonials({ isDark }: TestimonialsProps) {
                 <div className="relative w-11 h-11 rounded-2xl overflow-hidden flex-shrink-0">
                   <AppImage src={t.avatar} alt={t.alt} fill className="object-cover" />
                 </div>
+
                 <div className="flex-1 min-w-0">
                   <div className={`text-sm font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                     {t.name}
                   </div>
+
                   <div className={`text-xs ${isDark ? 'text-white/40' : 'text-gray-400'}`}>
                     {t.role} · {t.date}
                   </div>
                 </div>
+
                 {active === i && (
                   <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse flex-shrink-0" />
                 )}
