@@ -173,7 +173,7 @@ export default function AboutPage() {
                 <div className="aspect-video relative overflow-hidden">
                   {/* Placeholder Image */}
                   <img
-                    src="https://scontent.fkhi2-3.fna.fbcdn.net/v/t39.30808-6/659051333_1371460745024502_2052811108556907646_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeFA7Ofr3EojZpbL3yJ1FkWr6wGwynuG4_7rAbDKe4bj_k4LWjAxpoMNNlhd1O5yVOxbzVNS2eAtoIcaNCCFp3Vo&_nc_ohc=Wx-UWVZOHUcQ7kNvwETsCDb&_nc_oc=AdosWhdnk3NacPkUd7XXlwUZ4Wu-ZSeqYZAdCBE8BdokfxO8Dhejq-zlSsJvaIYHnOg&_nc_zt=23&_nc_ht=scontent.fkhi2-3.fna&_nc_gid=kRguCAvAywKfzlUu5a3cZg&_nc_ss=7a3a8&oh=00_Af1NNI14bj97NDP3qnZ2f_-9bA2YVlQcJs07Jbtk-a9mNQ&oe=69E91A36"
+                    src="https://ik.imagekit.io/akif/akif-icenspice-img-big4.jpg"
                     alt="Ice n Spice Restaurant"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />

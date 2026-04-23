@@ -17,8 +17,7 @@ const slides = [
       'Juicy seekh kebabs, perfectly spiced and grilled to perfection, served on a bed of aromatic rice.',
     cta: 'Order Now',
     ctaSecondary: 'Explore Menu',
-    image:
-      'https://scontent.fkhi2-3.fna.fbcdn.net/v/t51.82787-15/601496909_18087512363084414_6033846545613407868_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=13d280&_nc_eui2=AeEI6kWKljYezKSI7jqDuEiY6Dag_hjh2o_oNqD-GOHaj5pUNypZ8jl56X_OZ2lR-ncRQ12SS2GafEQzJyKFkBY5&_nc_ohc=zfywp2uzHJIQ7kNvwHnLOCl&_nc_oc=AdqGovdqEezcRXXVt8k0iFnXLmCjoWbrb2yEqIOdaSu7VyrWRxQ7elG8AedSHxgn78Y&_nc_zt=23&_nc_ht=scontent.fkhi2-3.fna&_nc_gid=VCY771uKNHnTVSZImRfnbQ&_nc_ss=7a3a8&oh=00_Af0MsJepplYolGFoPxPTFJ60IBkoGKg1JmcMtE9cV62WOA&oe=69E922B6',
+    image: 'https://ik.imagekit.io/akif/akif-icenspice-img-big.jpg',
     alt: 'Beautifully plated gourmet meal with grilled steak and roasted vegetables',
     badge: "🔥 Today's Special",
     stat1: { value: '4.9★', label: 'Rating' },
@@ -35,8 +34,7 @@ const slides = [
       'Our delicious wraps are filled with fresh chicken, juicy beef, crisp veggies, and flavorful sauces with a perfect touch of spice.',
     cta: 'Taste the Difference',
     ctaSecondary: 'View Specials',
-    image:
-      'https://scontent.fkhi2-2.fna.fbcdn.net/v/t39.30808-6/486533563_1067903482046898_2635773534178329927_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=13d280&_nc_eui2=AeG26liAosh8X1HGH8AO6yGOgtEvOVvnx8uC0S85W-fHy4c3aZx5ZJZvnHjZ9N7xJgZRHZiCy_J-2P2pq_vh9MGk&_nc_ohc=ommBSGLu780Q7kNvwH-f6FT&_nc_oc=AdqEh7QwAvlk8FV8wcmTijmvENnKJaWpVU1yzlZYYYSbMmOlyXi4ipiMETUVSoVreMU&_nc_zt=23&_nc_ht=scontent.fkhi2-2.fna&_nc_gid=6R0Aq1wu9UnT4VxKa6tKmg&_nc_ss=7a3a8&oh=00_Af3As6K0YLmTZqMSVGsz0KTcBF_9mhnpsMg9qrnyxRM-qg&oe=69E92B3E',
+    image: 'https://ik.imagekit.io/akif/akif-icenspice-img-big2.jpg',
     alt: 'Fresh colorful pizza with vibrant toppings on wooden board',
     badge: '🌿 Hot & Fresh',
     stat1: { value: '50+', label: 'Dishes' },
@@ -53,8 +51,7 @@ const slides = [
       'A flavor-packed burger with crispy chicken and juicy beef, loaded with fresh ingredients and rich taste in every bite.',
     cta: 'See Burgers',
     ctaSecondary: 'Full Menu',
-    image:
-      'https://scontent.fkhi2-3.fna.fbcdn.net/v/t39.30808-6/656710848_1365786088925301_7564074220554557258_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=7b2446&_nc_eui2=AeFgRniXWPb-PpHo3JnE1hE4cOTQW9WMVjFw5NBb1YxWMTyAj2ejK-Kxgv6Xv8yYbnrkxtSbr8OY3ctOa9_LNReq&_nc_ohc=MNY2pYroDWcQ7kNvwEMhlb9&_nc_oc=AdqdgF9yAnfoeagjDhyoW19iDQnrjf3PF5H-_FE0IdKi0ziyZOc1GM9Y6hi_UTOY8zI&_nc_zt=23&_nc_ht=scontent.fkhi2-3.fna&_nc_gid=-N_w5yMmZerjVOdSawYQ-w&_nc_ss=7a3a8&oh=00_Af0SJAxuFsqHGAwUIhuGgPQNROgs4rPBZnJ5QcuB_zS6nQ&oe=69E92966',
+    image: 'https://ik.imagekit.io/akif/akif-icenspice-img-big1.jpg',
     alt: 'Decadent chocolate dessert with gold leaf decoration and berry garnish',
     badge: "✨ Chef's Pick",
     stat1: { value: '30+', label: 'Desserts' },
