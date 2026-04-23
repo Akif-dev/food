@@ -1,9 +1,9 @@
-import { imageHosts } from "./image-hosts.config.js";
+import { imageHosts } from './image-hosts.config.js';
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   productionBrowserSourceMaps: true,
-  distDir: process.env.DIST_DIR || ".next",
+  distDir: process.env.DIST_DIR || '.next',
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -13,22 +13,13 @@ const nextConfig = {
   images: {
     remotePatterns: imageHosts,
   },
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/homepage",
-        permanent: false,
-      },
-    ];
-  },
   webpack(config) {
     config.module.rules.push({
       test: /\.(jsx|tsx)$/,
       exclude: [/node_modules/],
       use: [
         {
-          loader: "@dhiwise/component-tagger/nextLoader",
+          loader: '@dhiwise/component-tagger/nextLoader',
         },
       ],
     });

@@ -31,7 +31,7 @@ export default function Footer({ isDark = true }: FooterProps) {
           </div>
 
           <div className={`flex items-center gap-6 text-sm font-medium ${textBody}`}>
-            <a href="/homepage" className={`hover:text-amber-400 transition-colors`}>
+            <a href="/" className={`hover:text-amber-400 transition-colors`}>
               Home
             </a>
 

@@ -230,7 +230,7 @@ export default function OrderSuccess({ orderId, isDark }: OrderSuccessProps) {
                 Order More 🍽️
               </Link>
               <Link
-                href="/homepage"
+                href="/"
                 className="flex-1 py-4 rounded-2xl font-bold text-base text-center transition-all duration-300 hover:scale-105"
                 style={{
                   background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
