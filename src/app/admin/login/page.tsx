@@ -21,7 +21,8 @@ export default function AdminLogin() {
     const requiredPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
 
     if (password === requiredPassword) {
-      document.cookie = `admin_password=${password}; path=/; max-age=86400`;
+      const isSecure = window.location.protocol === 'https:';
+      document.cookie = `admin_password=${password}; path=/; max-age=86400${isSecure ? '; Secure' : ''}; SameSite=Lax`;
       const redirect = searchParams.get('redirect') || '/admin';
       router.push(redirect);
     } else {
