@@ -18,7 +18,8 @@ export default function AdminLogin() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const requiredPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+    const requiredPassword =
+      process.env.NEXT_PUBLIC_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD || 'admin123';
 
     if (password === requiredPassword) {
       const isSecure = window.location.protocol === 'https:';

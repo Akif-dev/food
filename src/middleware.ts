@@ -7,7 +7,8 @@ export function middleware(request: NextRequest) {
   // Protect admin routes
   if (pathname.startsWith('/admin')) {
     const adminPassword = request.cookies.get('admin_password');
-    const requiredPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const requiredPassword =
+      process.env.ADMIN_PASSWORD || process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
 
     // Allow access to admin login page (we'll create this)
     if (pathname === '/admin/login') {
