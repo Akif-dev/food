@@ -32,8 +32,8 @@ const slides = [
     titleHighlight: 'Infinite Flavor',
     subtitle:
       'Our delicious wraps are filled with fresh chicken, juicy beef, crisp veggies, and flavorful sauces with a perfect touch of spice.',
-    cta: 'Taste the Difference',
-    ctaSecondary: 'View Specials',
+    cta: 'Order Wraps',
+    ctaSecondary: 'View Menu',
     image: 'https://ik.imagekit.io/akif/akif-icenspice-img-big2.jpg',
     alt: 'Fresh colorful pizza with vibrant toppings on wooden board',
     badge: '🌿 Hot & Fresh',
