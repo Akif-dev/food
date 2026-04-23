@@ -214,7 +214,7 @@ export default function HeroSlider({ isDark }: HeroSliderProps) {
               </Link>
               <Link
                 href="#menu-section"
-                className="px-8 py-4 rounded-2xl text-base font-bold text-white glass-dark hover:bg-white/10 transition-all duration-300 hover:scale-105 cursor-pointer"
+                className="px-8 py-4 rounded-2xl text-base font-bold text-white bg-[rgba(255,255,255,0.09)] backdrop-blur-[12px] border border-[rgba(255,255,255,0.2)] hover:bg-white/10 transition-all duration-300 hover:scale-105 cursor-pointer"
               >
                 {slide.ctaSecondary}
               </Link>
