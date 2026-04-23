@@ -113,7 +113,15 @@ export default function CartSidebar({
                 </p>
               </div>
               <button
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  const menuSection = document.getElementById('menu-section');
+                  if (menuSection) {
+                    menuSection.scrollIntoView({ behavior: 'smooth' });
+                  } else {
+                    window.location.href = '/#menu-section';
+                  }
+                }}
                 className="px-6 py-3 rounded-xl font-bold text-white text-sm"
                 style={{ background: 'linear-gradient(135deg, #F59E0B, #F97316)' }}
               >

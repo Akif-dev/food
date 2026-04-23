@@ -40,7 +40,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {sidebarOpen && (
               <div>
                 <h1 className="font-bold text-lg" style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}>
-                  Admin Panel
+                  Ice n Spice
                 </h1>
                 <p
                   className="text-xs"
@@ -88,6 +88,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="text-xl">🏠</span>
             {sidebarOpen && <span className="font-medium">Back to Site</span>}
           </Link>
+          <button
+            onClick={() => {
+              document.cookie = 'admin_password=; path=/; max-age=0';
+              window.location.href = '/admin/login';
+            }}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 w-full mt-2 ${
+              isDark ? 'text-red-400 hover:bg-red-500/10' : 'text-red-600 hover:bg-red-500/10'
+            }`}
+          >
+            <span className="text-xl">🚪</span>
+            {sidebarOpen && <span className="font-medium">Logout</span>}
+          </button>
         </div>
       </aside>
 

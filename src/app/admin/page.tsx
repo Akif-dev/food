@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -136,8 +137,9 @@ export default function AdminDashboard() {
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button
-            className="p-4 rounded-xl text-left transition-all hover:scale-105"
+          <Link
+            href="/admin/menu"
+            className="p-4 rounded-xl text-left transition-all hover:scale-105 block"
             style={{
               background: 'linear-gradient(135deg, #F59E0B, #F97316)',
               color: 'white',
@@ -146,9 +148,10 @@ export default function AdminDashboard() {
             <div className="text-2xl mb-2">🍔</div>
             <div className="font-bold">Add Menu Item</div>
             <div className="text-sm opacity-80">Create new dish</div>
-          </button>
-          <button
-            className="p-4 rounded-xl text-left transition-all hover:scale-105"
+          </Link>
+          <Link
+            href="/admin/orders"
+            className="p-4 rounded-xl text-left transition-all hover:scale-105 block"
             style={{
               background: 'linear-gradient(135deg, #10B981, #059669)',
               color: 'white',
@@ -157,9 +160,9 @@ export default function AdminDashboard() {
             <div className="text-2xl mb-2">📋</div>
             <div className="font-bold">View Orders</div>
             <div className="text-sm opacity-80">Manage orders</div>
-          </button>
-          <button
-            className="p-4 rounded-xl text-left transition-all hover:scale-105"
+          </Link>
+          <div
+            className="p-4 rounded-xl text-left transition-all hover:scale-105 opacity-50 cursor-not-allowed"
             style={{
               background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
               color: 'white',
@@ -167,8 +170,8 @@ export default function AdminDashboard() {
           >
             <div className="text-2xl mb-2">📊</div>
             <div className="font-bold">Analytics</div>
-            <div className="text-sm opacity-80">View reports</div>
-          </button>
+            <div className="text-sm opacity-80">Coming soon</div>
+          </div>
         </div>
       </div>
     </div>

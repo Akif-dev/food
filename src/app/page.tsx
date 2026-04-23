@@ -1,19 +1,12 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-
 import Header from '@/components/Header';
-
 import Footer from '@/components/Footer';
-
 import HeroSlider from './homepage/components/HeroSlider';
-
 import MenuGrid from './menu/components/MenuGrid';
-
 import CartSidebar from './menu/components/CartSidebar';
-
 import { useTheme } from '@/contexts/ThemeContext';
-
 import { useCart, CartItem } from '@/contexts/CartContext';
 
 export default function HomePage() {

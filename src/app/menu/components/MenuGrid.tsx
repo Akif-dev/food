@@ -496,7 +496,11 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
 
   const fetchMenuItems = async () => {
     try {
-      const { data, error } = await supabase.from('menu_items').select('*').eq('available', true);
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('*')
+        .eq('available', true)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 

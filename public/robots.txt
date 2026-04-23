@@ -1,0 +1,13 @@
+# Ice n Spice Robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://icenspice.pk/sitemap.xml
+
+# Disallow admin routes
+Disallow: /admin/
+
+# Disallow API routes
+Disallow: /api/

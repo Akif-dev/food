@@ -43,8 +43,7 @@ export default function MenuManagement() {
       const { data, error } = await supabase
         .from('menu_items')
         .select('*')
-        .order('created_at', { ascending: false });
-
+        .order('name', { ascending: true });
       if (error) throw error;
       setMenuItems(data || []);
     } catch (error) {

@@ -196,10 +196,10 @@ export default function OrderManagement() {
                           className="text-xs"
                           style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}
                         >
-                          🌶️ {item.spice_level}
+                          🌶️ Spice: {item.spice_level}
                         </div>
                       )}
-                      {item.addons && item.addons.length > 0 && (
+                      {item.addons && Array.isArray(item.addons) && item.addons.length > 0 && (
                         <div
                           className="text-xs"
                           style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}
@@ -226,22 +226,22 @@ export default function OrderManagement() {
               </div>
             )}
 
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               {order.status === 'pending' && (
-                <button
-                  onClick={() => updateOrderStatus(order.id, 'completed')}
-                  className="px-4 py-2 rounded-xl font-medium transition-all bg-emerald-500 text-white hover:bg-emerald-600"
-                >
-                  Accept & Complete
-                </button>
-              )}
-              {order.status !== 'cancelled' && order.status !== 'completed' && (
-                <button
-                  onClick={() => updateOrderStatus(order.id, 'cancelled')}
-                  className="px-4 py-2 rounded-xl font-medium transition-all bg-red-500 text-white hover:bg-red-600"
-                >
-                  Cancel
-                </button>
+                <>
+                  <button
+                    onClick={() => updateOrderStatus(order.id, 'completed')}
+                    className="px-4 py-2 rounded-xl font-medium transition-all bg-emerald-500 text-white hover:bg-emerald-600"
+                  >
+                    Accept & Complete
+                  </button>
+                  <button
+                    onClick={() => updateOrderStatus(order.id, 'cancelled')}
+                    className="px-4 py-2 rounded-xl font-medium transition-all bg-red-500 text-white hover:bg-red-600"
+                  >
+                    Cancel
+                  </button>
+                </>
               )}
             </div>
           </div>

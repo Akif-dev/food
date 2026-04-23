@@ -1,0 +1,41 @@
+{
+  "name": "Ice n Spice - Premium Food Delivery",
+  "short_name": "Ice n Spice",
+  "description": "Order delicious Arabic wraps, Turkish platters, Zinger burgers, and more from Ice n Spice. Fast 25-minute delivery in North Nazimabad, Karachi.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0F",
+  "theme_color": "#F59E0B",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/assets/images/app_logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/images/app_logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["food", "restaurant", "delivery"],
+  "shortcuts": [
+    {
+      "name": "Order Now",
+      "short_name": "Order",
+      "description": "Browse menu and order food",
+      "url": "/menu",
+      "icons": [{ "src": "/assets/images/app_logo.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "View Menu",
+      "short_name": "Menu",
+      "description": "View our full menu",
+      "url": "/menu",
+      "icons": [{ "src": "/assets/images/app_logo.png", "sizes": "96x96" }]
+    }
+  ]
+}
