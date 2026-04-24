@@ -113,10 +113,10 @@ export default function Header({
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            {/* Theme Toggle */}
+            {/* Theme Toggle - Desktop/Tablet Only */}
             <button
               onClick={onThemeToggle}
-              className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${
+              className={`hidden md:flex w-9 h-9 rounded-xl items-center justify-center transition-all duration-300 ${
                 isDark
                   ? 'bg-white/8 hover:bg-white/15 text-white/70'
                   : 'bg-black/5 hover:bg-black/10 text-gray-600'
@@ -126,9 +126,9 @@ export default function Header({
               <Icon name={isDark ? 'SunIcon' : 'MoonIcon'} size={18} variant="outline" />
             </button>
 
-            {/* User Auth */}
+            {/* User Auth - Desktop/Tablet Only */}
             {user ? (
-              <div className="relative">
+              <div className="relative hidden md:flex">
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
                   className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
@@ -152,12 +152,13 @@ export default function Header({
                     <Link
                       href="/profile"
                       onClick={() => setUserMenuOpen(false)}
-                      className={`block px-4 py-2 text-sm font-semibold transition-colors ${
+                      className={`flex items-center gap-3 px-4 py-2 text-sm font-semibold transition-colors ${
                         isDark
                           ? 'text-white/70 hover:text-white hover:bg-white/5'
                           : 'text-gray-600 hover:text-gray-900 hover:bg-black/5'
                       }`}
                     >
+                      <Icon name="UserIcon" size={16} variant="outline" />
                       My Profile
                     </Link>
                     <button
@@ -165,12 +166,13 @@ export default function Header({
                         logout();
                         setUserMenuOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2 text-sm font-semibold transition-colors ${
+                      className={`flex items-center gap-3 w-full text-left px-4 py-2 text-sm font-semibold transition-colors ${
                         isDark
                           ? 'text-red-400 hover:text-red-300 hover:bg-white/5'
                           : 'text-red-500 hover:text-red-600 hover:bg-black/5'
                       }`}
                     >
+                      <Icon name="ArrowRightOnRectangleIcon" size={16} variant="outline" />
                       Logout
                     </button>
                   </div>
@@ -179,12 +181,13 @@ export default function Header({
             ) : (
               <Link
                 href="/login"
-                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
                   isDark
                     ? 'bg-white/8 hover:bg-white/15 text-white/70'
                     : 'bg-black/5 hover:bg-black/10 text-gray-600'
                 }`}
               >
+                <Icon name="ArrowRightOnRectangleIcon" size={16} variant="outline" />
                 Login
               </Link>
             )}
@@ -224,10 +227,11 @@ export default function Header({
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden transition-all duration-400 overflow-hidden ${mobileOpen ? 'max-h-72 opacity-100' : 'max-h-0 opacity-0'}`}
+        className={`md:hidden transition-all duration-400 overflow-hidden ${mobileOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
         style={{ background: isDark ? 'rgba(10,10,15,0.98)' : 'rgba(250,248,243,0.98)' }}
       >
         <div className="px-4 pb-4 pt-2 space-y-1">
+          {/* Navigation Links */}
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -248,6 +252,72 @@ export default function Header({
               </Link>
             );
           })}
+
+          {/* Divider */}
+          <div className={`my-2 h-px ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
+
+          {/* User Auth - Mobile */}
+          {user ? (
+            <>
+              <Link
+                href="/profile"
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                  isDark
+                    ? 'text-white/60 hover:text-white hover:bg-white/5'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-black/5'
+                }`}
+              >
+                <Icon name="UserIcon" size={18} variant="outline" />
+                <span>My Profile</span>
+              </Link>
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileOpen(false);
+                }}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 w-full ${
+                  isDark
+                    ? 'text-red-400 hover:text-red-300 hover:bg-white/5'
+                    : 'text-red-500 hover:text-red-600 hover:bg-black/5'
+                }`}
+              >
+                <Icon name="ArrowRightOnRectangleIcon" size={18} variant="outline" />
+                <span>Logout</span>
+              </button>
+            </>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMobileOpen(false)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                isDark
+                  ? 'text-white/60 hover:text-white hover:bg-white/5'
+                  : 'text-gray-500 hover:text-gray-900 hover:bg-black/5'
+              }`}
+            >
+              <Icon name="ArrowRightOnRectangleIcon" size={18} variant="outline" />
+              <span>Login</span>
+            </Link>
+          )}
+
+          {/* Divider */}
+          <div className={`my-2 h-px ${isDark ? 'bg-white/10' : 'bg-black/10'}`} />
+
+          {/* Theme Toggle with Text */}
+          <button
+            onClick={() => {
+              onThemeToggle?.();
+            }}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 w-full ${
+              isDark
+                ? 'text-white/60 hover:text-white hover:bg-white/5'
+                : 'text-gray-500 hover:text-gray-900 hover:bg-black/5'
+            }`}
+          >
+            <Icon name={isDark ? 'SunIcon' : 'MoonIcon'} size={18} variant="outline" />
+            <span>{isDark ? 'Light Theme' : 'Dark Theme'}</span>
+          </button>
         </div>
       </div>
     </header>

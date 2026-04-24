@@ -21,7 +21,7 @@ interface Order {
 export default function ProfilePage() {
   const router = useRouter();
   const { user, logout, updateUser, loading: authLoading } = useAuth();
-  const { isDark } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
 
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -116,7 +116,7 @@ export default function ProfilePage() {
   if (authLoading || loading) {
     return (
       <div style={{ background: bg, minHeight: '100vh' }} className="theme-transition">
-        <Header cartCount={0} onCartClick={() => {}} isDark={isDark} onThemeToggle={() => {}} />
+        <Header cartCount={0} onCartClick={() => {}} isDark={isDark} onThemeToggle={toggleTheme} />
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-amber-500">Loading...</div>
         </div>
@@ -130,7 +130,7 @@ export default function ProfilePage() {
 
   return (
     <div style={{ background: bg, minHeight: '100vh' }} className="theme-transition">
-      <Header cartCount={0} onCartClick={() => {}} isDark={isDark} onThemeToggle={() => {}} />
+      <Header cartCount={0} onCartClick={() => {}} isDark={isDark} onThemeToggle={toggleTheme} />
 
       <main className="pt-20 pb-16 px-4">
         <div className="max-w-4xl mx-auto">
