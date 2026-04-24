@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 import Icon from '@/components/ui/AppIcon';
 
@@ -20,9 +21,11 @@ export default function Header({
   onThemeToggle,
 }: HeaderProps) {
   const pathname = usePathname();
+  const { user, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [badgeAnimate, setBadgeAnimate] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -122,6 +125,69 @@ export default function Header({
             >
               <Icon name={isDark ? 'SunIcon' : 'MoonIcon'} size={18} variant="outline" />
             </button>
+
+            {/* User Auth */}
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                    isDark
+                      ? 'bg-white/8 hover:bg-white/15 text-white/70'
+                      : 'bg-black/5 hover:bg-black/10 text-gray-600'
+                  }`}
+                  aria-label="User menu"
+                >
+                  <Icon name="UserIcon" size={18} variant="outline" />
+                </button>
+
+                {userMenuOpen && (
+                  <div
+                    className={`absolute right-0 top-12 w-48 rounded-xl shadow-2xl py-2 z-50 ${
+                      isDark
+                        ? 'bg-brand-dark border border-white/8'
+                        : 'bg-white border border-black/6'
+                    }`}
+                  >
+                    <Link
+                      href="/profile"
+                      onClick={() => setUserMenuOpen(false)}
+                      className={`block px-4 py-2 text-sm font-semibold transition-colors ${
+                        isDark
+                          ? 'text-white/70 hover:text-white hover:bg-white/5'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-black/5'
+                      }`}
+                    >
+                      My Profile
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setUserMenuOpen(false);
+                      }}
+                      className={`w-full text-left px-4 py-2 text-sm font-semibold transition-colors ${
+                        isDark
+                          ? 'text-red-400 hover:text-red-300 hover:bg-white/5'
+                          : 'text-red-500 hover:text-red-600 hover:bg-black/5'
+                      }`}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                  isDark
+                    ? 'bg-white/8 hover:bg-white/15 text-white/70'
+                    : 'bg-black/5 hover:bg-black/10 text-gray-600'
+                }`}
+              >
+                Login
+              </Link>
+            )}
 
             {/* Cart */}
             <button

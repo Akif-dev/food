@@ -12,6 +12,7 @@ export default function AdminDashboard() {
     totalRevenue: 0,
     pendingOrders: 0,
     menuItems: 0,
+    totalUsers: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -21,9 +22,10 @@ export default function AdminDashboard() {
 
   const fetchStats = async () => {
     try {
-      const [ordersResult, menuItemsResult] = await Promise.all([
+      const [ordersResult, menuItemsResult, usersResult] = await Promise.all([
         supabase.from('orders').select('total, status'),
         supabase.from('menu_items').select('id', { count: 'exact', head: true }),
+        supabase.from('users').select('id', { count: 'exact', head: true }),
       ]);
 
       if (ordersResult.data) {
@@ -36,6 +38,7 @@ export default function AdminDashboard() {
           totalRevenue,
           pendingOrders,
           menuItems: menuItemsResult.count || 0,
+          totalUsers: usersResult.count || 0,
         });
       }
     } catch (error) {
@@ -68,9 +71,9 @@ export default function AdminDashboard() {
       textColor: 'text-amber-500',
     },
     {
-      title: 'Menu Items',
-      value: stats.menuItems,
-      icon: '🍔',
+      title: 'Total Users',
+      value: stats.totalUsers,
+      icon: '👥',
       color: 'bg-purple-500/15',
       textColor: 'text-purple-500',
     },
@@ -136,7 +139,7 @@ export default function AdminDashboard() {
         <h2 className="text-xl font-bold mb-4" style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}>
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Link
             href="/admin/menu"
             className="p-4 rounded-xl text-left transition-all hover:scale-105 block"
@@ -161,17 +164,30 @@ export default function AdminDashboard() {
             <div className="font-bold">View Orders</div>
             <div className="text-sm opacity-80">Manage orders</div>
           </Link>
-          <div
-            className="p-4 rounded-xl text-left transition-all hover:scale-105 opacity-50 cursor-not-allowed"
+          <Link
+            href="/admin/users"
+            className="p-4 rounded-xl text-left transition-all hover:scale-105 block"
             style={{
               background: 'linear-gradient(135deg, #6366F1, #4F46E5)',
               color: 'white',
             }}
           >
-            <div className="text-2xl mb-2">📊</div>
-            <div className="font-bold">Analytics</div>
-            <div className="text-sm opacity-80">Coming soon</div>
-          </div>
+            <div className="text-2xl mb-2">👥</div>
+            <div className="font-bold">Manage Users</div>
+            <div className="text-sm opacity-80">View & edit users</div>
+          </Link>
+          <Link
+            href="/admin/categories"
+            className="p-4 rounded-xl text-left transition-all hover:scale-105 block"
+            style={{
+              background: 'linear-gradient(135deg, #EC4899, #DB2777)',
+              color: 'white',
+            }}
+          >
+            <div className="text-2xl mb-2">�</div>
+            <div className="font-bold">Categories</div>
+            <div className="text-sm opacity-80">Manage categories</div>
+          </Link>
         </div>
       </div>
     </div>

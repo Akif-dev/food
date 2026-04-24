@@ -14,6 +14,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/menu', label: 'Menu Items', icon: '🍔' },
     { href: '/admin/orders', label: 'Orders', icon: '📋' },
+    { href: '/admin/users', label: 'Users', icon: '👥' },
     { href: '/admin/categories', label: 'Categories', icon: '📁' },
   ];
 

@@ -478,8 +478,9 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
       const { data, error } = await supabase
         .from('categories')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('sort_order', { ascending: true });
       if (error) throw error;
+
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -498,14 +499,21 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
     try {
       const { data, error } = await supabase
         .from('menu_items')
-        .select('*')
+        .select(
+          `
+          *,
+          categories (
+            name
+          )
+        `
+        )
         .eq('available', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
       if (data && data.length > 0) {
-        const transformed = data.map((item) => ({
+        const transformed = data.map((item: any) => ({
           id: item.id,
           name: item.name,
           description: item.description || '',
@@ -514,10 +522,11 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
           reviews: Math.floor(Math.random() * 100) + 50,
           image: item.image_url || '/assets/images/no_image.png',
           alt: item.name,
-          category: item.category_id ? item.category_id.toString() : 'all',
+          category: item.categories?.name?.toLowerCase() || 'all',
           isVeg: false,
           prepTime: '20 min',
           calories: '500 kcal',
+          sort_order: item.sort_order || 0,
           variations:
             item.variations?.map((v: string, i: number) => ({
               id: `v${i}`,
@@ -529,29 +538,71 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
             [],
           spiceLevels: item.spice_levels || [],
         }));
-        setMenuItems(transformed);
+
+        // Filter out items from the 6 removed categories
+        const categoriesToRemove = ['burgers', 'pizza', 'sushi', 'grills', 'desserts', 'drinks'];
+        const filteredItems = transformed.filter(
+          (item) => !categoriesToRemove.includes(item.category)
+        );
+        setMenuItems(filteredItems);
+      } else {
+        // Fallback to hardcoded menu data if Supabase has no items
+        const categoriesToRemove = ['burgers', 'pizza', 'sushi', 'grills', 'desserts', 'drinks'];
+        const filteredMenuData = menuData.filter(
+          (item) => !categoriesToRemove.includes(item.category)
+        );
+        setMenuItems(filteredMenuData);
       }
     } catch (error) {
       console.error('Error fetching menu items:', error);
+      // Fallback to hardcoded menu data on error
+      const categoriesToRemove = ['burgers', 'pizza', 'sushi', 'grills', 'desserts', 'drinks'];
+      const filteredMenuData = menuData.filter(
+        (item) => !categoriesToRemove.includes(item.category)
+      );
+      setMenuItems(filteredMenuData);
     }
   };
 
   const filtered = useMemo(() => {
-    return menuItems.filter((item) => {
-      let matchCat = activeCategory === 'all';
-      if (!matchCat) {
-        const categoryIdName = categoryIdToName[activeCategory];
-        matchCat =
-          item.category === activeCategory ||
-          (categoryIdName !== undefined && item.category === categoryIdName);
-      }
+    let result = menuItems.filter((item) => {
+      const matchCat = activeCategory === 'all' || item.category === activeCategory;
       const matchSearch =
         search === '' ||
         item.name.toLowerCase().includes(search.toLowerCase()) ||
         item.description.toLowerCase().includes(search.toLowerCase());
       return matchCat && matchSearch;
     });
-  }, [activeCategory, search, menuItems, categoryIdToName]);
+
+    // Sort by category sort_order, then by item sort_order when ALL is selected
+    if (activeCategory === 'all') {
+      result = result.sort((a, b) => {
+        const catA = categories.find((c) => c.name.toLowerCase() === a.category);
+        const catB = categories.find((c) => c.name.toLowerCase() === b.category);
+        const orderA = catA?.sort_order ?? 999;
+        const orderB = catB?.sort_order ?? 999;
+
+        // First sort by category sort_order
+        if (orderA !== orderB) {
+          return orderA - orderB;
+        }
+
+        // Then sort by item sort_order (if available), otherwise by id
+        const itemOrderA = (a as any).sort_order ?? (a as any).id ?? 999;
+        const itemOrderB = (b as any).sort_order ?? (b as any).id ?? 999;
+        return itemOrderA - itemOrderB;
+      });
+    } else {
+      // When specific category is selected, sort by item sort_order (if available), otherwise by id
+      result = result.sort((a, b) => {
+        const itemOrderA = (a as any).sort_order ?? (a as any).id ?? 999;
+        const itemOrderB = (b as any).sort_order ?? (b as any).id ?? 999;
+        return itemOrderA - itemOrderB;
+      });
+    }
+
+    return result;
+  }, [activeCategory, search, menuItems, categories]);
 
   const borderColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
   const textPrimary = isDark ? '#F5F5F0' : '#1A1A24';
@@ -649,11 +700,11 @@ export default function MenuGrid({ isDark, onAddToCart, initialCategory = 'all' 
                 <span>All</span>
               </button>
               {categories.map((cat) => {
-                const isActive = activeCategory === cat.id.toString();
+                const isActive = activeCategory === cat.name.toLowerCase();
                 return (
                   <button
                     key={cat.id}
-                    onClick={() => setActiveCategory(cat.id.toString())}
+                    onClick={() => setActiveCategory(cat.name.toLowerCase())}
                     className={`category-pill flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-xl text-md font-bold transition-all duration-300 ${
                       isActive
                         ? 'text-white shadow-lg'

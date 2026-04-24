@@ -31,7 +31,7 @@ export default function CategoryScroll({ isDark }: CategoryScrollProps) {
 
         .select('*')
 
-        .order('created_at', { ascending: false });
+        .order('sort_order', { ascending: true });
 
       if (error) throw error;
 

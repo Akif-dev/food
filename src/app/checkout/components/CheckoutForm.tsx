@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAddresses } from '@/contexts/AddressContext';
 
 interface CartItem {
   id: string;
@@ -51,8 +53,13 @@ export default function CheckoutForm({
 
   onOrderSuccess,
 
+  orderPlacing,
+
   setOrderPlacing,
 }: CheckoutFormProps) {
+  const { user } = useAuth();
+  const { addresses, loading: addressesLoading } = useAddresses();
+  const [selectedAddress, setSelectedAddress] = useState<number | null>(null);
   const [form, setForm] = useState({
     name: '',
 
@@ -74,6 +81,36 @@ export default function CheckoutForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [submitting, setSubmitting] = useState(false);
+
+  // Pre-fill form when user logs in
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        name: user.name,
+        email: user.email,
+        phone: user.phone || '',
+        address: user.address || '',
+        area: user.area || '',
+        city: user.city || 'Karachi',
+      }));
+    }
+  }, [user]);
+
+  // Pre-fill form when address is selected
+  useEffect(() => {
+    if (selectedAddress) {
+      const address = addresses.find((a) => a.id === selectedAddress);
+      if (address) {
+        setForm((prev) => ({
+          ...prev,
+          address: address.full_address,
+          area: address.area,
+          city: address.city,
+        }));
+      }
+    }
+  }, [selectedAddress, addresses]);
 
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
@@ -168,6 +205,7 @@ export default function CheckoutForm({
         .from('orders')
 
         .insert({
+          user_id: user?.id || null,
           customer_name: form.name,
 
           customer_phone: form.phone,
@@ -247,6 +285,42 @@ export default function CheckoutForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Logged in User Info Box */}
+      {user && (
+        <div
+          className="rounded-3xl overflow-hidden"
+          style={{
+            background: 'linear-gradient(135deg, rgba(245,158,11,0.1), rgba(249,115,22,0.05))',
+            border: '1.5px solid #F59E0B',
+          }}
+        >
+          <div className="px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+                style={{ background: 'linear-gradient(135deg, #F59E0B, #F97316)' }}
+              >
+                👤
+              </div>
+              <div>
+                <div className="font-bold text-lg" style={{ color: textPrimary }}>
+                  {user.name}
+                </div>
+                <div className="text-sm" style={{ color: textMuted }}>
+                  {user.email}
+                </div>
+              </div>
+            </div>
+            <div
+              className="px-4 py-2 rounded-xl text-sm font-semibold"
+              style={{ background: 'rgba(245,158,11,0.2)', color: '#F59E0B' }}
+            >
+              ✓ Logged In
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Delivery Type */}
 
       <div
@@ -298,6 +372,101 @@ export default function CheckoutForm({
           })}
         </div>
       </div>
+
+      {/* Saved Addresses for Logged In Users */}
+      {user && deliveryType === 'delivery' && addresses.length > 0 && (
+        <div
+          className="rounded-3xl overflow-hidden"
+          style={{ background: sectionBg, border: `1px solid ${borderColor}` }}
+        >
+          <div className="px-6 py-5 border-b" style={{ borderColor }}>
+            <h2 className="font-display font-black text-xl" style={{ color: textPrimary }}>
+              Saved Addresses
+            </h2>
+          </div>
+
+          <div className="px-6 py-5 space-y-3">
+            <div
+              className="p-4 rounded-xl cursor-pointer transition-all hover:scale-102"
+              style={{
+                background: selectedAddress === null ? 'rgba(245,158,11,0.1)' : inputBg,
+                border: `1.5px solid ${selectedAddress === null ? '#F59E0B' : borderColor}`,
+              }}
+              onClick={() => setSelectedAddress(null)}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-5 h-5 rounded-full flex items-center justify-center"
+                  style={{
+                    background:
+                      selectedAddress === null
+                        ? '#F59E0B'
+                        : isDark
+                          ? 'rgba(255,255,255,0.1)'
+                          : 'rgba(0,0,0,0.05)',
+                  }}
+                >
+                  {selectedAddress === null && <div className="w-2 h-2 rounded-full bg-white" />}
+                </div>
+                <div className="text-sm font-semibold" style={{ color: textPrimary }}>
+                  Enter New Address
+                </div>
+              </div>
+            </div>
+
+            {addresses.map((address) => (
+              <div
+                key={address.id}
+                className="p-4 rounded-xl cursor-pointer transition-all hover:scale-102"
+                style={{
+                  background: selectedAddress === address.id ? 'rgba(245,158,11,0.1)' : inputBg,
+                  border: `1.5px solid ${selectedAddress === address.id ? '#F59E0B' : borderColor}`,
+                }}
+                onClick={() => setSelectedAddress(address.id)}
+              >
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-5 h-5 rounded-full flex items-center justify-center mt-0.5"
+                    style={{
+                      background:
+                        selectedAddress === address.id
+                          ? '#F59E0B'
+                          : isDark
+                            ? 'rgba(255,255,255,0.1)'
+                            : 'rgba(0,0,0,0.05)',
+                    }}
+                  >
+                    {selectedAddress === address.id && (
+                      <div className="w-2 h-2 rounded-full bg-white" />
+                    )}
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-sm font-bold" style={{ color: textPrimary }}>
+                        {address.label}
+                      </span>
+                      {address.is_default && (
+                        <span
+                          className="px-2 py-0.5 rounded text-xs font-semibold"
+                          style={{ background: 'rgba(245,158,11,0.2)', color: '#F59E0B' }}
+                        >
+                          Default
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-sm" style={{ color: textMuted }}>
+                      {address.full_address}
+                    </div>
+                    <div className="text-xs mt-1" style={{ color: textMuted }}>
+                      {address.area}, {address.city}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Customer Details */}
 

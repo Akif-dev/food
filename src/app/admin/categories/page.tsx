@@ -25,9 +25,9 @@ export default function CategoriesManagement() {
       const { data, error } = await supabase
         .from('categories')
         .select('*')
-        .order('created_at', { ascending: false })
-        .order('name', { ascending: true });
+        .order('sort_order', { ascending: true });
       if (error) throw error;
+
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);

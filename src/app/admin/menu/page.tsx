@@ -30,8 +30,9 @@ export default function MenuManagement() {
       const { data, error } = await supabase
         .from('categories')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('sort_order', { ascending: true });
       if (error) throw error;
+
       setCategories(data || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -42,10 +43,33 @@ export default function MenuManagement() {
     try {
       const { data, error } = await supabase
         .from('menu_items')
-        .select('*')
-        .order('name', { ascending: true });
+        .select(
+          `
+          *,
+          categories (
+            name,
+            sort_order
+          )
+        `
+        )
+        .order('created_at', { ascending: false });
       if (error) throw error;
-      setMenuItems(data || []);
+
+      // Sort by category sort_order, then by item sort_order
+      const sorted = data?.sort((a: any, b: any) => {
+        const catA = a.categories?.sort_order ?? 999;
+        const catB = b.categories?.sort_order ?? 999;
+
+        // First sort by category sort_order
+        if (catA !== catB) {
+          return catA - catB;
+        }
+
+        // Then sort by item sort_order
+        return (a.sort_order ?? 999) - (b.sort_order ?? 999);
+      });
+
+      setMenuItems(sorted || []);
     } catch (error) {
       console.error('Error fetching menu items:', error);
     } finally {

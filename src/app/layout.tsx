@@ -3,7 +3,11 @@ import type { Metadata, Viewport } from 'next';
 import '../styles/index.css';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { CartProvider } from '@/contexts/CartContext';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { AddressProvider } from '@/contexts/AddressContext';
+import { FavoritesProvider } from '@/contexts/FavoritesContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import ScrollToTop from '@/components/ScrollToTop';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -95,19 +99,30 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ErrorBoundary>
-          <ThemeProvider>
-            <CartProvider>
-              {children}
+          <AuthProvider>
+            <AddressProvider>
+              <FavoritesProvider>
+                <ThemeProvider>
+                  <CartProvider>
+                    {children}
+                    <ScrollToTop />
 
-              {/* Rocket.new ki scripts jo hydration mismatch karti hain */}
-              <script
-                type="module"
-                async
-                src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Frestaurant4754back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.17"
-              />
-              <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.2" />
-            </CartProvider>
-          </ThemeProvider>
+                    {/* Rocket.new ki scripts jo hydration mismatch karti hain */}
+                    <script
+                      type="module"
+                      async
+                      src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Frestaurant4754back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.17"
+                    />
+                    <script
+                      type="module"
+                      defer
+                      src="https://static.rocket.new/rocket-shot.js?v=0.0.2"
+                    />
+                  </CartProvider>
+                </ThemeProvider>
+              </FavoritesProvider>
+            </AddressProvider>
+          </AuthProvider>
         </ErrorBoundary>
       </body>
     </html>

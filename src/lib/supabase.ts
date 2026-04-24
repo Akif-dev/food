@@ -18,6 +18,7 @@ export interface MenuItem {
   addons?: string[];
   spice_levels?: string[];
   available: boolean;
+  sort_order: number;
   created_at: string;
   updated_at: string;
 }
@@ -57,6 +58,7 @@ export interface Category {
   name: string;
   description?: string;
   icon: string;
+  sort_order: number;
   created_at: string;
   updated_at: string;
 }
