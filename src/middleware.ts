@@ -7,9 +7,11 @@ export function middleware(request: NextRequest) {
   // Protect admin routes
   if (pathname.startsWith('/admin')) {
     const adminPassword = request.cookies.get('admin_password');
-    const requiredPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
 
-    // 1. Agar login page par hai aur pehle se authenticated hai, toh /admin par bhej do
+    // HARDCODE Karo yahan check karne ke liye
+    const requiredPassword = 'admin123';
+
+    // 1. Agar login page par hai aur pehle se authenticated hai
     if (pathname === '/admin/login') {
       if (adminPassword?.value === requiredPassword) {
         return NextResponse.redirect(new URL('/admin', request.url));
@@ -17,10 +19,9 @@ export function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // 2. Check if user is authenticated for other admin routes
+    // 2. Auth check
     if (!adminPassword || adminPassword.value !== requiredPassword) {
       const loginUrl = new URL('/admin/login', request.url);
-      // Loop se bachne ke liye check karein ke kahin pehle se redirect toh nahi laga
       if (pathname !== '/admin/login') {
         loginUrl.searchParams.set('redirect', pathname);
         return NextResponse.redirect(loginUrl);

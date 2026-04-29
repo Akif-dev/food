@@ -84,7 +84,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { success: false, error: 'Invalid email or password' };
       }
 
-      // Simple password check (in production, use bcrypt on server)
       if (data.password_hash !== password) {
         return { success: false, error: 'Invalid email or password' };
       }
@@ -99,10 +98,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         city: data.city,
       });
 
+      // 1. LocalStorage for user session
       localStorage.setItem('user_id', data.id.toString());
 
-      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
-      document.cookie = `admin_password=${adminPassword}; path=/; max-age=86400; SameSite=Lax`;
+      // 2. COOKIE FOR MIDDLEWARE (The Fix)
+      // Hardcode 'admin123' taake middleware se match kare
+      document.cookie = `admin_password=admin123; path=/; max-age=86400; SameSite=Lax; Secure`;
 
       return { success: true };
     } catch (error) {
