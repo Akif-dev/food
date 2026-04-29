@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -8,7 +8,24 @@ import { useTheme } from '@/contexts/ThemeContext';
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { isDark, toggleTheme } = useTheme();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      // Default to closed on mobile, open on desktop
+      if (window.innerWidth >= 768) {
+        setSidebarOpen(true);
+      } else {
+        setSidebarOpen(false);
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const navItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
@@ -23,10 +40,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       style={{ background: isDark ? '#0A0A0F' : '#FAF8F3', minHeight: '100vh' }}
       className="theme-transition"
     >
+      {/* Mobile Backdrop */}
+      {isMobile && sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 ${
-          sidebarOpen ? 'w-64' : 'w-20'
+          isMobile
+            ? sidebarOpen
+              ? 'w-64 translate-x-0'
+              : 'w-64 -translate-x-full'
+            : sidebarOpen
+              ? 'w-64'
+              : 'w-20'
         }`}
         style={{ background: isDark ? '#111118' : '#FFFFFF' }}
       >
@@ -105,7 +136,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* Main Content */}
-      <main className={`transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-20'}`}>
+      <main
+        className={`transition-all duration-300 ${isMobile ? 'ml-0' : sidebarOpen ? 'ml-64' : 'ml-20'}`}
+      >
         {/* Top Bar */}
         <header
           className="h-16 px-6 flex items-center justify-between border-b sticky top-0 z-30"
