@@ -31,8 +31,9 @@ export default function LoginPage() {
       const result = await login(email, password);
 
       if (result.success) {
-        // Production fix: Next.js router ki bajaye window.location use karein
-        // Taake browser middleware ko fresh cookie bheje aur stuck na ho
+        // PRODUCTION FIX:
+        // Localhost par router.push chal jata hai, lekin live URL par
+        // Middleware ko fresh cookies dene ke liye window.location zaroori hai.
         const redirect = searchParams.get('redirect') || '/admin';
 
         if (typeof window !== 'undefined') {
