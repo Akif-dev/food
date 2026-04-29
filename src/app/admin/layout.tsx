@@ -123,7 +123,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )}
         </div>
 
-        <nav className="p-4 overflow-y-auto flex-1" style={{ maxHeight: 'calc(100vh - 180px)' }}>
+        <nav className="p-4 overflow-y-auto flex-1" style={{ maxHeight: 'calc(100vh - 80px)' }}>
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -144,35 +144,35 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </Link>
             );
           })}
-        </nav>
 
-        <div
-          className="absolute bottom-0 left-0 right-0 p-4 border-t flex-shrink-0"
-          style={{ borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }}
-        >
-          <Link
-            href="/"
-            onClick={() => isMobile && setSidebarOpen(false)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-              isDark ? 'text-white/70 hover:bg-white/5' : 'text-gray-600 hover:bg-black/5'
-            }`}
+          <div
+            className="mt-6 pt-4 border-t"
+            style={{ borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }}
           >
-            <span className="text-xl flex-shrink-0">🏠</span>
-            {sidebarOpen && <span className="font-medium truncate">Back to Site</span>}
-          </Link>
-          <button
-            onClick={() => {
-              document.cookie = 'admin_password=; path=/; max-age=0';
-              window.location.href = '/admin/login';
-            }}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 w-full mt-2 ${
-              isDark ? 'text-red-400 hover:bg-red-500/10' : 'text-red-600 hover:bg-red-500/10'
-            }`}
-          >
-            <span className="text-xl flex-shrink-0">🚪</span>
-            {sidebarOpen && <span className="font-medium truncate">Logout</span>}
-          </button>
-        </div>
+            <Link
+              href="/"
+              onClick={() => isMobile && setSidebarOpen(false)}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                isDark ? 'text-white/70 hover:bg-white/5' : 'text-gray-600 hover:bg-black/5'
+              }`}
+            >
+              <span className="text-xl flex-shrink-0">🏠</span>
+              {sidebarOpen && <span className="font-medium truncate">Back to Site</span>}
+            </Link>
+            <button
+              onClick={() => {
+                document.cookie = 'admin_password=; path=/; max-age=0';
+                window.location.href = '/admin/login';
+              }}
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 w-full mt-2 ${
+                isDark ? 'text-red-400 hover:bg-red-500/10' : 'text-red-600 hover:bg-red-500/10'
+              }`}
+            >
+              <span className="text-xl flex-shrink-0">🚪</span>
+              {sidebarOpen && <span className="font-medium truncate">Logout</span>}
+            </button>
+          </div>
+        </nav>
       </aside>
 
       {/* Main Content */}
