@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -10,22 +10,39 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { isDark, toggleTheme } = useTheme();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-      // Default to closed on mobile, open on desktop
-      if (window.innerWidth >= 768) {
-        setSidebarOpen(true);
-      } else {
-        setSidebarOpen(false);
-      }
+      // Use touch capability and screen size for better mobile detection
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      const isSmallScreen = window.innerWidth < 1024; // Use 1024 for tablet/mobile
+      setIsMobile(isTouchDevice || isSmallScreen);
     };
 
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Close sidebar on route change
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [pathname, isMobile]);
+
+  // Prevent body scroll when sidebar is open on mobile
+  useEffect(() => {
+    if (isMobile && sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobile, sidebarOpen]);
 
   const navItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
@@ -50,11 +67,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
       {/* Sidebar */}
       <aside
+        ref={sidebarRef}
         className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 ${
           isMobile
             ? sidebarOpen
-              ? 'w-64 translate-x-0'
-              : 'w-64 -translate-x-full'
+              ? 'w-72 translate-x-0'
+              : 'w-72 -translate-x-full'
             : sidebarOpen
               ? 'w-64'
               : 'w-20'
@@ -62,20 +80,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         style={{ background: isDark ? '#111118' : '#FFFFFF' }}
       >
         <div
-          className="p-4 border-b flex items-center justify-between"
+          className="p-4 border-b flex items-center justify-between flex-shrink-0"
           style={{ borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-lg">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
               🍽️
             </div>
             {sidebarOpen && (
-              <div>
-                <h1 className="font-bold text-lg" style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}>
+              <div className="min-w-0">
+                <h1
+                  className="font-bold text-lg truncate"
+                  style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}
+                >
                   Ice n Spice
                 </h1>
                 <p
-                  className="text-xs"
+                  className="text-xs truncate"
                   style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}
                 >
                   Restaurant Management
@@ -86,7 +107,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {isMobile && (
             <button
               onClick={() => setSidebarOpen(false)}
-              className={`p-2 rounded-lg transition-colors ${
+              className={`p-2 rounded-lg transition-colors flex-shrink-0 ${
                 isDark ? 'hover:bg-white/10 text-white/70' : 'hover:bg-black/5 text-gray-600'
               }`}
             >
@@ -102,7 +123,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )}
         </div>
 
-        <nav className="p-4">
+        <nav className="p-4 overflow-y-auto flex-1" style={{ maxHeight: 'calc(100vh - 180px)' }}>
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -118,15 +139,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                       : 'text-gray-600 hover:bg-black/5'
                 }`}
               >
-                <span className="text-xl">{item.icon}</span>
-                {sidebarOpen && <span className="font-medium">{item.label}</span>}
+                <span className="text-xl flex-shrink-0">{item.icon}</span>
+                {sidebarOpen && <span className="font-medium truncate">{item.label}</span>}
               </Link>
             );
           })}
         </nav>
 
         <div
-          className="absolute bottom-0 left-0 right-0 p-4 border-t"
+          className="absolute bottom-0 left-0 right-0 p-4 border-t flex-shrink-0"
           style={{ borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }}
         >
           <Link
@@ -136,8 +157,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               isDark ? 'text-white/70 hover:bg-white/5' : 'text-gray-600 hover:bg-black/5'
             }`}
           >
-            <span className="text-xl">🏠</span>
-            {sidebarOpen && <span className="font-medium">Back to Site</span>}
+            <span className="text-xl flex-shrink-0">🏠</span>
+            {sidebarOpen && <span className="font-medium truncate">Back to Site</span>}
           </Link>
           <button
             onClick={() => {
@@ -148,8 +169,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               isDark ? 'text-red-400 hover:bg-red-500/10' : 'text-red-600 hover:bg-red-500/10'
             }`}
           >
-            <span className="text-xl">🚪</span>
-            {sidebarOpen && <span className="font-medium">Logout</span>}
+            <span className="text-xl flex-shrink-0">🚪</span>
+            {sidebarOpen && <span className="font-medium truncate">Logout</span>}
           </button>
         </div>
       </aside>
