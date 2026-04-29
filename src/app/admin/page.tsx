@@ -93,7 +93,7 @@ export default function AdminDashboard() {
         Dashboard Overview
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         {statCards.map((stat) => (
           <div
             key={stat.title}
@@ -139,7 +139,7 @@ export default function AdminDashboard() {
         <h2 className="text-xl font-bold mb-4" style={{ color: isDark ? '#F5F5F0' : '#1A1A24' }}>
           Quick Actions
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link
             href="/admin/menu"
             className="p-4 rounded-xl text-left transition-all hover:scale-105 block"

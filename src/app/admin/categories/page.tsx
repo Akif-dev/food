@@ -104,14 +104,14 @@ export default function CategoriesManagement() {
             setFormData({ name: '', description: '', icon: '' });
             setShowModal(true);
           }}
-          className="px-6 py-3 rounded-xl font-bold text-white transition-all hover:scale-105"
+          className="px-4 py-3 rounded-xl font-bold text-white transition-all hover:scale-105 whitespace-nowrap"
           style={{ background: 'linear-gradient(135deg, #F59E0B, #F97316)' }}
         >
           + Add Category
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {categories.map((category) => (
           <div
             key={category.id}

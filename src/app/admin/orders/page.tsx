@@ -65,12 +65,12 @@ export default function OrderManagement() {
         Order Management
       </h1>
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
         {filterOptions.map((option) => (
           <button
             key={option.value}
             onClick={() => setFilter(option.value as any)}
-            className={`px-4 py-2 rounded-xl font-medium transition-all ${
+            className={`px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap ${
               filter === option.value
                 ? 'bg-amber-500 text-white'
                 : isDark

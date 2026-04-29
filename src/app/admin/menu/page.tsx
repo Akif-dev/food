@@ -165,7 +165,7 @@ export default function MenuManagement() {
             });
             setShowModal(true);
           }}
-          className="px-6 py-3 rounded-xl font-bold text-white transition-all hover:scale-105"
+          className="px-4 py-3 rounded-xl font-bold text-white transition-all hover:scale-105 whitespace-nowrap"
           style={{ background: 'linear-gradient(135deg, #F59E0B, #F97316)' }}
         >
           + Add Item
@@ -173,13 +173,13 @@ export default function MenuManagement() {
       </div>
 
       <div
-        className="rounded-2xl overflow-hidden"
+        className="rounded-2xl overflow-hidden overflow-x-auto"
         style={{
           background: isDark ? '#111118' : '#FFFFFF',
           border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'}`,
         }}
       >
-        <table className="w-full">
+        <table className="w-full min-w-[600px]">
           <thead>
             <tr style={{ background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.02)' }}>
               <th

@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         style={{ background: isDark ? '#111118' : '#FFFFFF' }}
       >
         <div
-          className="p-4 border-b"
+          className="p-4 border-b flex items-center justify-between"
           style={{ borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)' }}
         >
           <div className="flex items-center gap-3">
@@ -83,6 +83,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
             )}
           </div>
+          {isMobile && (
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className={`p-2 rounded-lg transition-colors ${
+                isDark ? 'hover:bg-white/10 text-white/70' : 'hover:bg-black/5 text-gray-600'
+              }`}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
         </div>
 
         <nav className="p-4">
@@ -92,6 +109,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={() => isMobile && setSidebarOpen(false)}
                 className={`flex items-center gap-3 px-4 py-3 rounded-xl mb-2 transition-all duration-200 ${
                   isActive
                     ? 'bg-amber-500/15 text-amber-500'
@@ -113,6 +131,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         >
           <Link
             href="/"
+            onClick={() => isMobile && setSidebarOpen(false)}
             className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
               isDark ? 'text-white/70 hover:bg-white/5' : 'text-gray-600 hover:bg-black/5'
             }`}
@@ -202,7 +221,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Page Content */}
-        <div className="p-6">{children}</div>
+        <div className="p-6 overflow-x-auto">{children}</div>
       </main>
     </div>
   );
