@@ -98,12 +98,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         city: data.city,
       });
 
-      // 1. LocalStorage for user session
+      // LocalStorage for user session
       localStorage.setItem('user_id', data.id.toString());
-
-      // 2. COOKIE FOR MIDDLEWARE (The Fix)
-      // Hardcode 'admin123' taake middleware se match kare
-      document.cookie = `admin_password=admin123; path=/; max-age=86400; SameSite=Lax; Secure`;
 
       return { success: true };
     } catch (error) {
