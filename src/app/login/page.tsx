@@ -11,7 +11,7 @@ export default function LoginPage() {
   const searchParams = useSearchParams();
   const { login } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -27,16 +27,25 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
 
-    const result = await login(email, password);
+    try {
+      const result = await login(email, password);
 
-    if (result.success) {
-      const redirect = searchParams.get('redirect') || '/';
-      router.push(redirect);
-    } else {
-      setError(result.error || 'Login failed');
+      if (result.success) {
+        // Production fix: Next.js router ki bajaye window.location use karein
+        // Taake browser middleware ko fresh cookie bheje aur stuck na ho
+        const redirect = searchParams.get('redirect') || '/admin';
+
+        if (typeof window !== 'undefined') {
+          window.location.href = redirect;
+        }
+      } else {
+        setError(result.error || 'Login failed');
+        setLoading(false);
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -116,10 +125,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-6 text-center">
-            <p
-              className="text-sm"
-              style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}
-            >
+            <p className="text-sm" style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}>
               Don't have an account?{' '}
               <Link
                 href="/register"
