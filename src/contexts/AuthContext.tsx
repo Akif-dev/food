@@ -101,6 +101,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       localStorage.setItem('user_id', data.id.toString());
 
+      const adminPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123';
+      document.cookie = `admin_password=${adminPassword}; path=/; max-age=86400; SameSite=Lax`;
+
       return { success: true };
     } catch (error) {
       console.error('Login error:', error);
@@ -173,6 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem('user_id');
+    document.cookie = 'admin_password=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
   }, []);
 
   const updateUser = useCallback(
