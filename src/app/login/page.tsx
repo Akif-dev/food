@@ -31,11 +31,15 @@ export default function LoginPage() {
       const result = await login(email, password);
 
       if (result.success) {
-        // ZAROORI FIX: Next.js router.push use nahi karna yahan
-        // window.location use karne se browser refresh ho kar redirect hoga
-        // aur middleware ko naye session ka pata chal jayega.
+        // PRODUCTION REDIRECT FIX:
+        // Hum window.location.replace use kar rahe hain taake:
+        // 1. Browser refresh ho aur Middleware ko naya session mil jaye.
+        // 2. User wapas back button daba kar login page par na aa sake.
         const targetPath = searchParams.get('redirect') || '/admin';
-        window.location.href = targetPath;
+
+        if (typeof window !== 'undefined') {
+          window.location.replace(targetPath);
+        }
       } else {
         setError(result.error || 'Login failed');
         setLoading(false);
@@ -75,6 +79,8 @@ export default function LoginPage() {
               </label>
               <input
                 type="email"
+                name="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-300"
@@ -94,6 +100,8 @@ export default function LoginPage() {
               </label>
               <input
                 type="password"
+                name="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl outline-none transition-all duration-300"
@@ -102,7 +110,7 @@ export default function LoginPage() {
                   border: `1px solid ${error ? '#EF4444' : borderColor}`,
                   color: textPrimary,
                 }}
-                placeholder="Enter your password"
+                placeholder="Enter password"
                 required
               />
               {error && <p className="text-red-400 text-xs mt-1">{error}</p>}
