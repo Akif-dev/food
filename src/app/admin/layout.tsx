@@ -68,7 +68,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside
         ref={sidebarRef}
-        className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-full z-40 transition-all duration-300 flex flex-col ${
           isMobile
             ? sidebarOpen
               ? 'w-72 translate-x-0'
@@ -123,7 +123,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           )}
         </div>
 
-        <nav className="p-4 overflow-y-auto flex-1" style={{ maxHeight: 'calc(100vh - 80px)' }}>
+        <nav className="p-4 overflow-y-auto flex-1">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
