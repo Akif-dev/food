@@ -10,7 +10,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
+  const { isDark } = useTheme();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,20 +31,17 @@ export default function LoginPage() {
       const result = await login(email, password);
 
       if (result.success) {
-        // PRODUCTION FIX:
-        // Localhost par router.push chal jata hai, lekin live URL par
-        // Middleware ko fresh cookies dene ke liye window.location zaroori hai.
-        const redirect = searchParams.get('redirect') || '/admin';
-
-        if (typeof window !== 'undefined') {
-          window.location.href = redirect;
-        }
+        // ZAROORI FIX: Next.js router.push use nahi karna yahan
+        // window.location use karne se browser refresh ho kar redirect hoga
+        // aur middleware ko naye session ka pata chal jayega.
+        const targetPath = searchParams.get('redirect') || '/admin';
+        window.location.href = targetPath;
       } else {
         setError(result.error || 'Login failed');
         setLoading(false);
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
+      setError('An unexpected error occurred');
       setLoading(false);
     }
   };
@@ -88,7 +85,6 @@ export default function LoginPage() {
                 }}
                 placeholder="Enter your email"
                 required
-                autoFocus
               />
             </div>
 
@@ -136,16 +132,6 @@ export default function LoginPage() {
                 Sign up
               </Link>
             </p>
-          </div>
-
-          <div className="mt-4 text-center">
-            <a
-              href="/"
-              className="text-sm hover:text-amber-500 transition-colors"
-              style={{ color: isDark ? 'rgba(255,255,255,0.5)' : '#6B6B7A' }}
-            >
-              ← Back to website
-            </a>
           </div>
         </div>
       </div>
